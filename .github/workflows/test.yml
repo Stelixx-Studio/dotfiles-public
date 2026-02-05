@@ -1,0 +1,57 @@
+name: Test Fish Config
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install Fish shell
+      run: brew install fish
+      
+    - name: Install Fisher
+      run: |
+        fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+    
+    - name: Create config symlink
+      run: |
+        mkdir -p ~/.config
+        ln -s $PWD/.config/fish ~/.config/fish
+    
+    - name: Install Fisher plugins
+      run: fish -c "fisher update"
+      
+    - name: Test Fish startup
+      run: |
+        STARTUP_TIME=$(fish -c 'time fish -c exit' 2>&1 | grep -o '[0-9.]\+ millis' | grep -o '[0-9.]\+')
+        echo "Startup time: ${STARTUP_TIME}ms"
+        if (( $(echo "$STARTUP_TIME > 200" | bc -l) )); then
+          echo "❌ Startup time too slow: ${STARTUP_TIME}ms (should be <200ms)"
+          exit 1
+        fi
+        echo "✅ Startup time OK: ${STARTUP_TIME}ms"
+    
+    - name: Check for PATH duplicates
+      run: |
+        DUPLICATES=$(fish -c 'echo $PATH | tr " " "\n" | sort | uniq -d')
+        if [ -n "$DUPLICATES" ]; then
+          echo "❌ Found PATH duplicates:"
+          echo "$DUPLICATES"
+          exit 1
+        fi
+        echo "✅ No PATH duplicates found"
+    
+    - name: Verify critical commands
+      run: |
+        fish -c "command -v git && command -v fish && echo '✅ Critical commands available'"
+    
+    - name: Test config syntax
+      run: fish -n ~/.config/fish/config.fish
