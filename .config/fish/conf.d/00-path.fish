@@ -39,9 +39,10 @@ fish_add_path --append ~/.codeium/windsurf/bin
 fish_add_path --append ~/.antigravity/antigravity/bin
 fish_add_path --append ~/.opencode/bin
 
-# Android SDK
+# Android SDK (manual install from Google, not Homebrew)
 if test -d ~/Library/Android/sdk
     set -gx ANDROID_HOME ~/Library/Android/sdk
+    fish_add_path --append $ANDROID_HOME/cmdline-tools/latest/bin
     fish_add_path --append $ANDROID_HOME/platform-tools
 end
 
