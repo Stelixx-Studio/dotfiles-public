@@ -9,16 +9,15 @@ set -gx EDITOR nvim
 # Terminal
 set -gx TERM xterm-256color
 
-# Java - Dynamic Homebrew detection (prefer Java 17)
+# Java - Use Homebrew symlink (shorter path, auto-updates)
 if test -d /opt/homebrew/opt/openjdk@17
-    set -gx JAVA_HOME /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+    set -gx JAVA_HOME /opt/homebrew/opt/openjdk@17
     set -gx CPPFLAGS "-I/opt/homebrew/opt/openjdk@17/include"
-    fish_add_path --prepend $JAVA_HOME/bin
+    fish_add_path --prepend /opt/homebrew/opt/openjdk@17/bin
 else if test -d /opt/homebrew/opt/openjdk@21
-    # Fallback to Java 21 if 17 not found
-    set -gx JAVA_HOME /opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home
+    set -gx JAVA_HOME /opt/homebrew/opt/openjdk@21
     set -gx CPPFLAGS "-I/opt/homebrew/opt/openjdk@21/include"
-    fish_add_path --prepend $JAVA_HOME/bin
+    fish_add_path --prepend /opt/homebrew/opt/openjdk@21/bin
 end
 
 # Inkdrop (macOS only)
