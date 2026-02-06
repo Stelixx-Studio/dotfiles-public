@@ -1,9 +1,13 @@
 # ==============================================================================
 # PATH Management - Modern fish_add_path pattern
-# Priority: User bins → Language tools → System defaults
+# Priority: Homebrew → User bins → Language tools → System defaults
 # ==============================================================================
 
-# User binaries (highest priority)
+# Homebrew (CRITICAL - must be first for fish/brew commands)
+fish_add_path --prepend --move /opt/homebrew/bin
+fish_add_path --prepend --move /opt/homebrew/sbin
+
+# User binaries (highest priority after Homebrew)
 fish_add_path --prepend --move ~/.local/bin
 fish_add_path --prepend --move ~/bin
 
