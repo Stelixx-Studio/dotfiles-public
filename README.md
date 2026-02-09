@@ -24,7 +24,8 @@ My personal dotfiles for macOS development environment, optimized for speed and 
 
 - Fish shell config (modernized with modular structure)
 - Git config
-- Development tools setup
+- Development tools setup (Ghostty, Lazygit, Mise, Tmux, Neovim)
+- Homebrew Bundle management
 
 ## Shell setup (macOS)
 
@@ -109,6 +110,17 @@ tide configure
 echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells
 chsh -s /opt/homebrew/bin/fish
 ```
+## Configuration Coverage
+
+This repository tracks configurations for the following tools:
+
+- **Shell**: [Fish Shell](https://fishshell.com/)
+- **Terminal**: [Ghostty](https://ghostty.org/)
+- **Git UI**: [Lazygit](https://github.com/jesseduffield/lazygit)
+- **Multiplexer**: [Tmux](https://github.com/tmux/tmux)
+- **Runtime Manager**: [Mise](https://mise.jdx.dev/)
+- **Editor**: [Neovim](https://neovim.io/) (Essential Lua configs)
+- **Packages**: [Homebrew](https://brew.sh/) (via `Brewfile`)
 
 ## Additional Tools
 

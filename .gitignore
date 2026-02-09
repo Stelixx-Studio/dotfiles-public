@@ -19,3 +19,8 @@ ACTIVE_PLAN.md
 
 # [SKT] Learning Session Data
 features/skills/data/learning-session-*.json
+
+# Private/Secret Configs
+.config/fish/conf.d/local.fish
+.config/fish/conf.d/*.local.fish
+.config/**/secrets.*

@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.1.0] - 2026-02-09
+
+### Added
+- Expanded configuration coverage:
+  - Ghostty terminal config
+  - Lazygit config
+  - Mise runtime manager config
+  - Tmux multiplexer config (modular)
+  - Neovim essential Lua config
+  - Homebrew `Brewfile` (auto-dumped)
+- Improved `sync.fish` script with support for new tools
+- Security: Added ignore patterns for `local.fish` and private secrets
+
 ## [1.0.0] - 2026-02-06
 
 ### Added
