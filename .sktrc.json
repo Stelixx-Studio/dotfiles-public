@@ -1,0 +1,61 @@
+{
+  "version": "2.0.0",
+  "workspace": {
+    "type": "manual",
+    "language": "typescript",
+    "platform": [],
+    "modules": [
+      "claudekit"
+    ],
+    "custom": [
+      ".agent/instructions/custom.md"
+    ],
+    "instructions": {
+      "enabled": true,
+      "templates": [
+        "shared/typescript",
+        "shared/git",
+        "shared/testing",
+        "shared/accessibility",
+        "shared/security",
+        "cli-tool",
+        "library/npm"
+      ],
+      "custom": [
+        ".agent/instructions/custom.md"
+      ]
+    }
+  },
+  "mcp": {
+    "enabled": true,
+    "servers": {
+      "skt-context": {
+        "command": "skt",
+        "args": [
+          "mcp",
+          "start"
+        ]
+      }
+    }
+  },
+  "ai": {
+    "assistants": [
+      "antigravity",
+      "gemini",
+      "copilot"
+    ],
+    "paths": {
+      "antigravity": {
+        "workflows": ".agent/workflows",
+        "shared": ".skt/shared"
+      },
+      "gemini": {
+        "skills": ".gemini/skills",
+        "shared": ".skt/shared"
+      },
+      "copilot": {
+        "prompts": ".github/prompts"
+      }
+    }
+  }
+}

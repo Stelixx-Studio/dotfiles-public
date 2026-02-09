@@ -1,0 +1,6 @@
+id,agent_id,name,description,script,auto_execution,args_required
+orchestrator:new,orchestrator,new,"Start new track with auto-conflict detection",scripts/orchestrator_new.py,2,true
+orchestrator:list,orchestrator,list,"Show active tracks dashboard",scripts/orchestrator_list.py,3,false
+orchestrator:check,orchestrator,check,"Run conflict assessment across active tracks",scripts/orchestrator_check.py,3,false
+orchestrator:sync,orchestrator,sync,"Update ACTIVE_PLAN.md beacon",scripts/orchestrator_sync.py,3,false
+orchestrator:resume,orchestrator,resume,"Smart session recovery and warm-up",scripts/orchestrator_resume.py,3,false

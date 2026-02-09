@@ -1,0 +1,293 @@
+workflow_id,phase_order,phase_name,description,commands,outputs
+1,1,Initialize Track,Initialize a new track for the plan,"skt orchestrator:new ""$1""",Track initialized
+1,2,Research,Research architecture and best practices,".skt/shared/claudekit/scripts/parallel-research.sh ""architecture and best practices for: $1""",Research findings
+1,3,Audit & Context,Identify Risk Level and Load Rules,python3 .skt/shared/instructions/scripts/query-rules.py --workflow plan --format markdown,Project rules and risk audit
+1,4,Design Strategy,Generate design system reasoning and MASTER.md,"python3 .skt/shared/ui-ux-pro-max/scripts/search.py ""$1"" --design-system --persist -p ""$1""",Design system artifacts
+1,5,Structure,Load project structure,find features -type d | head -10,Directory structure
+1,6,Analyze,Create Spec with Rule Compliance audit,,Specification document (What/Why/Rules)
+1,7,Plan,Create Implementation Plan following Audit findings,,Actionable plan (How)
+1,8,Verify,Load auto-check template for verification,.skt/shared/claudekit/scripts/auto-check.sh,Quality checklist
+1,9,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+1,10,Checkpoint,Finalize plan track,skt orchestrator:checkpoint,Track finalized
+2,1,Initialize Track,Initialize a new track for the task,"skt orchestrator:new ""$1""",Track initialized
+2,2,Research,Research implementation patterns and libraries,".skt/shared/claudekit/scripts/parallel-research.sh ""implementation patterns and libraries for: $1""",Research findings
+2,3,Audit & Context,Identify Risk Level and Load Rules,python3 .skt/shared/instructions/scripts/query-rules.py --workflow cook --format markdown,Project rules and risk audit
+2,4,Design Strategy,Load or generate design rules from MASTER.md,"python3 .skt/shared/ui-ux-pro-max/scripts/search.py ""$1"" --design-system --persist -p ""$1""",Design system context
+2,5,Structure,Load project structure,find features -type d | head -10,Directory structure
+2,6,Plan,"Create Plan with ""Rule-First"" compliance strategy",,Implementation strategy
+2,7,Implement,Write code strictly following identified Audit rules,,Feature implementation
+2,8,Test,Run quality checks and tests,pnpm i18n:compile; pnpm test; pnpm tsc --noEmit; pnpm lint,Test results
+2,9,Review,Load auto-check template and verify,.skt/shared/claudekit/scripts/auto-check.sh,Quality verification
+2,10,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+3,1,Load Plan,Load existing implementation plan,,Plan details
+3,2,Implement,Execute plan and write code,,Code implementation
+3,3,Test,Run quality checks,pnpm test; pnpm tsc --noEmit; pnpm lint,Test results
+3,4,Verify,Verify against auto-check template,.skt/shared/claudekit/scripts/auto-check.sh,Verification results
+3,5,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+4,1,Initialize Track,Initialize a new track for the review,"skt orchestrator:new ""$1""",Track initialized
+4,2,Scout,Deep parallel search for similar patterns and standards,"python3 .skt/shared/workflows/scripts/agent_executor.py ""standards for $1""",Scout report
+4,3,Load Context,Load project standards from CSV database,python3 .skt/shared/instructions/scripts/query-rules.py --workflow review --format markdown,Project standards
+4,4,Analyze,Analyze code against standards,,Analysis report
+4,5,Check Rules,Verify all development rules,.skt/shared/claudekit/scripts/auto-check.sh,Rule violations
+4,6,Design Audit,"Verify UI/UX consistency, accessibility, and reasoning","python3 .skt/shared/ui-ux-pro-max/scripts/search.py ""$1"" --design-system",Design audit report
+4,7,Report,Generate review report,,Review checklist
+4,8,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+5,1,Setup,Prepare test environment,,Test setup
+5,2,Run Tests,Execute test suite,pnpm test,Test results
+5,3,Report,Generate test report without fixing,,Test report
+5,4,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+6,1,Initialize Track,Initialize a new track for the brainstorm,"skt orchestrator:new ""$1""",Track initialized
+6,2,Research,Research multiple solution approaches,".skt/shared/claudekit/scripts/parallel-research.sh ""solutions for: $1""",Solution options
+6,3,Context,Load project context,python3 .skt/shared/instructions/scripts/query-rules.py --workflow brainstorm --format markdown,Project context
+6,4,Design Research,Perform UI/UX reasoning for potential solutions,"python3 .skt/shared/ui-ux-pro-max/scripts/search.py ""$1"" --design-system",Design insights
+6,5,Explore,List 3-5 approaches with pros/cons,,Approach comparison
+6,6,Compare,Create trade-offs comparison table,,Trade-offs matrix
+6,7,Recommend,Recommend best approach with reasoning,,Recommendation
+6,8,Close Track,Finalize and close active track,skt orchestrator:close,Track closed
+8,1,Analyze,Analyze design requirements,,Requirement analysis
+8,2,Style Research,Research design variables and style guides,"python3 .skt/shared/ui-ux-pro-max/scripts/search.py ""$1"" --domain style",Design variables
+8,3,Generate,Generate AI mockup image,"generate_image ""$1""",Mockup image
+8,4,Present,Present the design to user,,Presentation
+8,5,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+10,1,Research,Research Three.js/R3F patterns,".skt/shared/claudekit/scripts/parallel-research.sh ""Three.js component structure for: $1""",Research findings
+10,2,Setup,Setup 3D scene environment,,Scene setup
+10,3,Implement,Implement 3D components,,Component code
+10,4,Test,Verify rendering and performance,,Performance metrics
+10,5,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+11,1,Initialize Track,Initialize a new track for the fix,"skt orchestrator:new ""$1""",Track initialized
+11,2,Analyze,Analyze bug and gather information,,Bug analysis
+11,3,Research,Research potential solutions,,Solution options
+11,4,Fix,Implement fix,,Bug fix
+11,5,Test,Test the fix,pnpm test,Test results
+11,6,Verify,Verify fix via active quality gate,.skt/shared/claudekit/scripts/auto-check.sh,Verification status
+11,7,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+12,1,Analyze,Quick analysis of bug,,Bug understanding
+12,2,Fix,Implement quick fix,,Bug fix
+12,3,Test,Test the fix,pnpm test,Test results
+12,4,Verify,Verification via active quality gate,.skt/shared/claudekit/scripts/auto-check.sh,Verification status
+12,5,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+13,1,Initialize Track,Initialize a new track for the complex fix,"skt orchestrator:new ""$1""",Track initialized
+13,2,Scout,Deep parallel thắm thính codebase liên quan đến bug,"python3 .skt/shared/workflows/scripts/agent_executor.py ""bug: $1""",Scout report
+13,3,Analyze,Deep analysis of complex bug,,Detailed analysis
+13,4,Research,Research similar issues and solutions,".skt/shared/claudekit/scripts/parallel-research.sh ""bug: $1""",Research findings
+13,5,Debug,Debug with detailed investigation,,Debug findings
+13,6,Fix,Implement comprehensive fix,,Bug fix
+13,7,Test,Thorough testing,pnpm test,Test results
+13,8,Verify,Verify fix and check for regressions,.skt/shared/claudekit/scripts/auto-check.sh,Verification report
+13,9,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+14,1,Analyze Logs,Analyze CI/CD error logs,,Analysis report
+14,2,Research,Research fix for CI/CD error,".skt/shared/claudekit/scripts/parallel-research.sh ""fix CI/CD error: $1""",Research findings
+14,3,Fix,Implement fix for CI/CD infrastructure,,Fix implementation
+14,4,Test,Trigger new build to verify fix,,Build status
+14,5,Verify,Verification via active quality gate,.skt/shared/claudekit/scripts/auto-check.sh,Verification status
+14,6,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+15,1,Parse Logs,Extract and parse error logs,,Parsed logs
+15,2,Analyze,Analyze root cause from logs,,Analysis report
+15,3,Research,Research solution for error,".skt/shared/claudekit/scripts/parallel-research.sh ""solution for error log: $1""",Research findings
+15,4,Fix,Implement fix based on research,,Fix implementation
+15,5,Test,Verify fix resolves the error,,Test results
+15,6,Verify,Verification via active quality gate,.skt/shared/claudekit/scripts/auto-check.sh,Verification status
+15,7,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+16,1,Analyze Failures,Extract and analyze test failure logs,,Failure analysis
+16,2,Fix,Implement fixes for failing tests,,Code fix implementation
+16,3,Rerun,Rerun tests to verify fixes,pnpm test,Check results
+16,4,Verify,Final verification of codebase health,.skt/shared/claudekit/scripts/auto-check.sh,Verification status
+16,5,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+17,1,Analyze Changes,Analyze staged and unstaged changes,git status --porcelain; git diff --cached --stat,Changed files list
+17,2,Generate Message,Create conventional commit message following format,,Commit message
+17,3,Handle Changeset,Detect and generate changeset if needed,python3 .skt/shared/skt-core/scripts/smart-changeset.py,Changeset file
+17,4,Commit,Commit changes with message,"git commit -m ""$MESSAGE""",Commit hash
+17,5,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+18,1,Analyze Changes,Analyze staged changes,git status --porcelain; git diff --cached --stat,Changed files list
+18,2,Generate Message,Create conventional commit message,,Commit message
+18,3,Handle Changeset,Detect and generate changeset if needed,python3 .skt/shared/skt-core/scripts/smart-changeset.py,Changeset file
+18,4,Commit,Commit changes with message,"git commit -m ""$MESSAGE""",Commit hash
+18,5,Push,Push to remote branch,git push,Push status
+18,6,Close Track,Finalize and close active track,skt orchestrator:close,Track closed
+19,1,Analyze Changes,Analyze all changes in branch,git status --porcelain; git diff --cached --stat; git diff origin/$(git branch --show-current)..HEAD --stat; git branch --show-current,Changed files and branch info
+19,2,Generate Title,Create PR title following conventional commits format,,PR title
+19,3,Generate Description,Create detailed PR description with changes summary,,PR description
+19,4,Create PR,Create pull request using GitHub CLI,"gh auth status && gh pr create --title ""$TITLE"" --body ""$DESCRIPTION"" --base main || echo ""Error: Install gh CLI with: brew install gh""",PR URL
+19,5,Verify,Verify PR was created,gh pr view,PR details
+19,6,Close Track,Finalize and close active track,skt orchestrator:close,Track closed
+20,1,Select Commits,Identify commits to cherry-pick,git log --oneline,Commit list
+20,2,Cherry Pick,Cherry-pick selected commits,git cherry-pick $COMMIT_HASH,Cherry-pick status
+20,3,Resolve Conflicts,Resolve conflicts if any,git status,Conflict resolution
+20,4,Verify,Verify cherry-picked changes,git log -1; git diff HEAD~1,Verification
+20,5,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+41,1,Initialize,Initialize context,python3 .skt/shared/workflows/scripts/context_loader.py,Context loaded
+41,2,Run MCP,Take screenshots via MCP,"/use-mcp screenshot ""Take screenshots of staging and production""",Screenshots taken
+41,3,Compare,Analyze screenshots for discrepancies,"/use-mcp vision ""Identify layout discrepancies""",Comparison results
+41,4,Report,Generate visual report,.skt/shared/claudekit/scripts/auto-check.sh --visual-report,Visual report
+42,1,Analyze,Identify research targets,,Research targets identified
+42,2,Search,Search docs via MCP,"/use-mcp search ""Search documentation for query""",Search results
+42,3,Extract,Extract info via MCP,"/use-mcp read ""Extract core API usage""",Extracted info
+42,4,Report,Summarize findings,,Research summary
+21,1,Analyze Project,Analyze project structure and detect documentation gaps,"find . -name ""*.md"" -not -path ""./node_modules/*"" -not -path ""./.next/*"" | wc -l; find features -type d -maxdepth 1 | wc -l",Documentation file count and feature count
+21,2,Detect Framework,Detect framework to determine doc structure,"python3 .skt/shared/instructions/scripts/detect-framework.py || echo ""unknown""",Framework type
+21,3,Create Structure,Create standard docs/ directory structure,mkdir -p docs/architecture docs/features docs/api docs/guides; touch docs/README.md CHANGELOG.md,Directory structure created
+21,4,Generate Templates,Generate doc templates based on project type,,Template files created
+21,5,Generate Index,Create docs/README.md navigation index,,Index file created
+21,6,Verify Structure,Verify all required docs exist and are linked,,Verification results
+21,7,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+22,1,Load Docs,Load all documentation files,"find docs -name ""*.md"" -type f 2>/dev/null || echo ""No docs directory""",Documentation files list
+22,2,Extract Structure,Extract document structure and headings,,Document hierarchy
+22,3,Extract Key Points,Identify key information from each document,,Key points per document
+22,4,Generate Summary,Create comprehensive summary with roadmap insight,"python3 .skt/shared/workflows/scripts/management_bridge.py; echo ""Generating summary...""",Summary document
+22,5,Generate TOC,Create table of contents with links,,Table of contents
+22,6,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+23,1,Detect Changes,Analyze git changes to identify doc updates needed,"git diff --cached --name-only | grep -E '\.(ts|tsx|js|jsx|py|md)$' || echo ""No changes""",Changed files
+23,2,Scout,Identify affected documents and missing rules,"python3 .skt/shared/workflows/scripts/agent_executor.py ""docs for changed files""",Scout report
+23,3,Analyze Impact,Determine which docs need updating based on changes,,Affected docs list
+23,4,Load Standards,Load documentation management standards,"cat .agent/workflows/documentation-management.md 2>/dev/null || echo ""No standards file""",Documentation standards
+23,5,Update Docs,Update affected documentation files,,Updated docs
+23,6,Update Changelog,Update CHANGELOG.md if needed,,Changelog updated
+23,7,Verify Links,Verify all internal links are valid,,Link verification results
+23,8,Review,Generate summary of doc changes for review,,Review summary
+23,9,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+24,1,Research,Research marketing trends and audience insight,".skt/shared/claudekit/scripts/parallel-research.sh ""marketing trends for: $1""",Research findings
+24,2,CRO Intelligence,Research conversion-optimized patterns and design reasoning,"python3 .skt/shared/ui-ux-pro-max/scripts/search.py ""$1"" --design-system",CRO principles
+24,3,Analyze Audience,Analyze target audience and tone of voice,,Audience profile
+24,4,Write,Generate marketing copy following CRO principles,,Drafted content
+24,5,Review,Review and polish content,,Final content
+24,6,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+26,1,Initialize Track,Initialize a new track for the project,"skt orchestrator:new ""$1""",Track initialized
+26,2,Research,Research project domain and tech stack,".skt/shared/claudekit/scripts/parallel-research.sh ""best practices for $1 project structure and libraries""",Research findings
+26,3,Plan,Create project initialization plan with architecture design,,Implementation plan
+26,4,Setup,Execute setup commands and install dependencies,,Project skeleton
+26,5,Verify,Perform final quality check on generated project,.skt/shared/claudekit/scripts/auto-check.sh,Verification status
+26,6,Checkpoint,Finalize project initialization track,skt orchestrator:checkpoint,Track finalized
+26,7,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+27,1,Research,Research project domain autonomously,".skt/shared/claudekit/scripts/parallel-research.sh ""autonomous bootstrap for: $1""",Research findings
+27,2,Plan,Generate autonomous implementation plan,,Plan
+27,3,Setup,Initialize codebase and infrastructure,,Codebase
+27,4,Verify,Final quality gate before deployment,.skt/shared/claudekit/scripts/auto-check.sh,Verification status
+27,5,Deploy,Deploy to production/staging environment,,Deployment status
+27,6,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+28,1,Analyze,Analyze skill requirements and existing skills,python3 .skt/shared/skills/scripts/query-skill.py --list,Existing skills list
+28,2,Design,Design skill structure and activation patterns,,Skill design document
+28,3,Document,Create skill instructions and references in CSV database,,Skill documentation
+28,4,Test,Test skill activation and integration,python3 .skt/shared/skills/scripts/query-skill.py $1,Test results
+28,5,Verify,Verification via active quality gate,.skt/shared/claudekit/scripts/auto-check.sh,Verification status
+28,6,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+29,1,Clarify,Ask clarifying questions about skill domain and purpose,,User responses
+29,2,Research,Research similar skills and patterns,".skt/shared/claudekit/scripts/parallel-research.sh ""skill patterns for: $1""",Research findings
+29,3,Design,Design skill structure (CSV schema + SKILL.md outline),,Skill schema
+29,4,Generate CSV,Create entries in skills.csv and related tables,,CSV entries
+29,5,Generate SKILL.md,Create SKILL.md following <100 line guideline,,SKILL.md file
+29,6,Create References,Add references/ directory if needed,,Reference docs
+29,7,Sync,Sync to all assistant formats,python3 .skt/shared/skills/scripts/sync-assistants.py,Sync status
+29,8,Test,Test skill activation and workflows,python3 .skt/shared/skills/scripts/query-skill.py $1; skt skill info $1,Test results
+29,9,Verify,Verification via active quality gate,.skt/shared/claudekit/scripts/auto-check.sh,Verification status
+29,10,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+30,1,Learning,Absorb context from external ClaudeKit resources (URLs),python3 .skt/shared/skt-core/scripts/evolve.py --skill $1 --phase learn --url $2,Context summary
+30,2,Audit,Perform gap analysis vs. centralized standards,python3 .skt/shared/skt-core/scripts/evolve.py --skill $1 --phase audit,Gaps identified
+30,3,Analyze,Load and analyze existing skill,python3 .skt/shared/skills/scripts/query-skill.py $1,Skill data
+30,4,Identify Issues,Identify areas for improvement in instructions and activation,,Issues list
+30,5,Optimize,Update CSV database with improvements,,Optimized skill
+30,6,Test,Verify improvements and sync to assistants,python3 .skt/shared/skills/scripts/sync-assistants.py,Updated skill data
+30,7,Verify,Verification via active quality gate,.skt/shared/claudekit/scripts/auto-check.sh,Verification status
+30,8,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+31,1,Analyze,Analyze user question,,Question analysis
+31,2,Scout,Deep parallel search for relevant context,"python3 .skt/shared/workflows/scripts/agent_executor.py ""$1""",Scout report
+31,3,Research,Research comprehensive answer,".skt/shared/claudekit/scripts/parallel-research.sh ""detailed answer for: $1""",Research findings
+31,4,Answer,Provide detailed answer based on research,,Answer text
+31,5,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+32,1,Initialize Track,Initialize a new track for the plan,"skt orchestrator:new ""$1""",Track initialized
+32,2,Research,Research architecture and best practices,".skt/shared/claudekit/scripts/parallel-research.sh ""architecture and best practices for: $1""",Research findings
+32,3,Context,Load project context from CSV database,python3 .skt/shared/instructions/scripts/query-rules.py --workflow plan --format markdown,Project rules and patterns
+32,4,Design Strategy,Generate design system reasoning and MASTER.md,"python3 .skt/shared/ui-ux-pro-max/scripts/search.py ""$1"" --design-system --persist -p ""$1""",Design system artifacts
+32,5,Structure,Load project structure,find features -type d | head -10,Directory structure
+32,6,Analyze,Analyze requirements and generate Specification (Spec),,Specification document (What/Why)
+32,7,Plan,Create actionable Implementation Plan based on Spec,,Implementation plan (How)
+32,8,Verify,Load auto-check template for verification,.skt/shared/claudekit/scripts/auto-check.sh,Quality checklist
+32,9,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+33,1,Initialize Track,Initialize a new track for this task,"skt orchestrator:new ""$1""",Track initialized
+33,2,Research,Research implementation patterns and libraries,".skt/shared/claudekit/scripts/parallel-research.sh ""implementation patterns and libraries for: $1""",Research findings
+33,3,Context,Load development rules from CSV database,python3 .skt/shared/instructions/scripts/query-rules.py --workflow cook --format markdown,Complete development rules
+33,4,Design Strategy,Load or generate design rules from MASTER.md,"python3 .skt/shared/ui-ux-pro-max/scripts/search.py ""$1"" --design-system --persist -p ""$1""",Design system context
+33,5,Structure,Load project structure,find features -type d | head -10,Directory structure
+33,6,Plan,Create Implementation Plan combining research and project context,,Implementation strategy
+33,7,Implement,Write code following all development rules,,Feature implementation
+33,8,Test,Run quality checks and tests,pnpm i18n:compile; pnpm test; pnpm tsc --noEmit; pnpm lint,Test results
+33,9,Review,Load auto-check template and verify,.skt/shared/claudekit/scripts/auto-check.sh,Quality verification
+33,10,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+34,1,Initialize Track,Initialize a new track for the review,"skt orchestrator:new ""$1""",Track initialized
+34,2,Load Context,Load project standards from CSV database,python3 .skt/shared/instructions/scripts/query-rules.py --workflow review --format markdown,Project standards
+34,3,Analyze,Analyze code against standards,,Analysis report
+34,4,Check Rules,Verify all development rules,.skt/shared/claudekit/scripts/auto-check.sh,Rule violations
+34,5,Design Audit,"Verify UI/UX consistency, accessibility, and reasoning","python3 .skt/shared/ui-ux-pro-max/scripts/search.py ""$1"" --design-system",Design audit report
+34,6,Report,Generate review report,,Review checklist
+34,7,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+35,0,Scout,Run deep codebase analysis and gather context before planning,"python3 .skt/shared/workflows/scripts/agent_executor.py ""$goal"" --tools gemini",Scout report generated
+35,1,Context,Load project orchestration context,python3 .skt/shared/workflows/scripts/context_loader.py,Orchestration context
+35,2,Plan,Check for existing plan or trigger skt:plan,"skt:plan ""$1""",Implementation plan
+35,3,Approve,Wait for user approval of the plan,,Approval status
+35,4,Execute,Delegate execution to skt:cook,"skt:cook ""$1""",Execution status
+35,5,Verify,Final verification and exit gate,.skt/shared/claudekit/scripts/auto-check.sh,Verification results
+35,6,Close Track,Finalize and close active track,skt orchestrator:close,Track closed
+36,1,Analyze Project,Analyze project structure and detect planning gaps,find plans -type d -maxdepth 1 | wc -l,Planning domain folders count
+36,2,Create Structure,Create domain-based plans structure,mkdir -p plans/features plans/infrastructure plans/design-system plans/core plans/archive; touch plans/README.md,Structure initialized
+36,3,Standardize,Apply naming conventions to existing plans,,Plans renamed and moved
+36,4,Verify,Verify structure and README,ls -R plans,Verification results
+36,5,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+37,1,Read Plans,Identify all active implementation plans,"find plans -name ""*.md"" -not -path ""*/archive/*""",Active plans list
+37,2,Extract Key Points,Identify objectives and status from each plan,,Key points per plan
+37,3,Generate Summary,Create comprehensive roadmap with coverage score,"python3 .skt/shared/workflows/scripts/management_bridge.py; echo ""Generating roadmap...""",Roadmap document
+37,4,Generate TOC,Create table of contents for plans,,Plans index
+37,5,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+38,1,Analyze Changes,Analyze git changes to identify plan updates needed,"git diff --cached --name-only || echo ""No changes""",Changed files
+38,2,Update Plans,Update status and checklist in affected plans,,Updated plans
+38,3,Cross-check Docs,Check if related documentation needs updates,python3 .skt/shared/workflows/scripts/management_bridge.py,Documentation gaps report
+38,4,Verify,Verify plan integrity,,Verification results
+38,5,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+39,1,Move Plan,Move completed plan to domain-specific archive folder,mv $PLAN_PATH plans/archive/$DOMAIN/,Plan archived
+39,2,Update Docs,Verify and suggest knowledge transfer to docs,python3 .skt/shared/workflows/scripts/management_bridge.py,Documentation sync suggestion
+39,3,Verify,Verify archival success,,Archival status
+39,4,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+40,1,Analyze,Parse search query and determine search strategy,,Query analysis
+40,2,Scout,Execute parallel file search using external CLI tools,"python3 .skt/shared/workflows/scripts/agent_executor.py ""$1""",File candidates
+40,3,Aggregate,Deduplicate and categorize discovered files,"python3 .skt/shared/workflows/scripts/scout_aggregator.py",Categorized file list
+40,4,Report,Generate organized report of discovered files,cat .skt/meta/scout-report.md,Scout report
+40,5,Sync Beacon,Update project beacon for multi-agent visibility,skt orchestrator:sync,Beacon synchronized
+43,1,Setup Environment,Create test Next.js project and initialize SKT,"mkdir -p /tmp/skt-mcp-test && cd /tmp/skt-mcp-test && pnpm create next-app nextjs-test --typescript --yes && cd nextjs-test && skt init",Test project created
+43,2,Install Registry,Install MCP registry infrastructure and test basic commands,"cd /tmp/skt-mcp-test/nextjs-test && skt mcp list && skt mcp info filesystem",Registry operational
+43,3,Test Installation,Test MCP server installation with filesystem and GitHub,"cd /tmp/skt-mcp-test/nextjs-test && skt mcp install filesystem && skt mcp install github --config '{""GITHUB_TOKEN"":""test""}'",Servers installed
+43,4,Verify Integration,Verify .sktrc.json updates and config correctness,"cd /tmp/skt-mcp-test/nextjs-test && cat .sktrc.json | jq '.features.mcp.servers'",Config verified
+43,5,Health Check,Run health checks on installed servers,"cd /tmp/skt-mcp-test/nextjs-test && skt mcp health --all",Health status
+43,6,Test Presets,Test preset installation (essentials preset),"cd /tmp/skt-mcp-test/nextjs-test && skt mcp install --preset essentials",Preset installed
+43,7,Report,Generate verification report and cleanup,"cd /tmp/skt-mcp-test/nextjs-test && skt mcp list --installed && rm -rf /tmp/skt-mcp-test",Verification complete
+47,1,Determine Parameters,Ask user for query parameters (category tier pattern limit),,User input collected
+47,2,Call MCP Tool,Execute query_tokens tool with parameters,mcp.call('design-system' 'query_tokens' params),Token list JSON
+47,3,Process Results,Parse and validate MCP response,,Validated token list
+47,4,Present to User,Format results as markdown table,,Formatted token reference
+48,1,Analyze Code,Load and analyze code for design system violations,,Code AST and violations list
+48,2,Call MCP Tool,Execute validate_usage tool,mcp.call('design-system' 'validate_usage' code),Validation report JSON
+48,3,Report Issues,Present violations with line numbers,,Issue report
+48,4,Suggest Fixes,Generate fix suggestions using design tokens,,Fix recommendations
+49,1,Parse Intent,Understand user's design intent from natural language,,Parsed intent
+49,2,Call MCP Tool,Execute suggest_token tool,mcp.call('design-system' 'suggest_token' intent),Token suggestions JSON
+49,3,Rank Results,Score and rank suggestions by relevance,,Ranked token list
+49,4,Present Suggestions,Format as markdown with examples,,Suggestion report
+50,1,Load Component,Read component file and extract code,,Component code
+50,2,Call MCP Tool,Execute analyze_component tool,mcp.call('design-system' 'analyze_component' component),Analysis report JSON
+50,3,Calculate Score,Compute compliance score and metrics,,Quality metrics
+50,4,Generate Report,Create comprehensive analysis report,,Analysis document
+51,1,Scan Files,Identify files to audit,,File list
+51,2,Call MCP Tool,Execute check_compliance for each file,mcp.call('design-system' 'check_compliance' files),Compliance reports
+51,3,Aggregate Results,Combine reports and calculate overall score,,Aggregate report
+51,4,Generate Report,Create executive summary with recommendations,,Compliance audit document
+52,1,Define Query,Parse research question into searchable terms,,Search query
+52,2,Call MCP Tool,Execute multiple MCP tools for research,mcp.call('design-system' 'query_tokens' + 'analyze_component'),Research data
+52,3,Analyze Patterns,Find patterns and anti-patterns in usage,,Pattern analysis
+52,4,Find Opportunities,Identify optimization and refactoring opportunities,,Opportunity report
+53,1,Initialize Context,Set up chat context and design system knowledge,,Context initialized
+53,2,Process Input,Parse user question and determine needed tools,,Parsed question
+53,3,Call MCP Tool,Execute appropriate MCP tools based on question,mcp.call('design-system' tool params),Tool responses
+53,4,Generate Response,Format response with examples and references,,Chat response
+53,5,Loop,Continue conversation until user exits,,Conversation history
+54,1,Setup Environment,Configure visual testing tools and MCP server,,Environment ready
+54,2,Capture Screenshots,Take screenshots of components,,Screenshot files
+54,3,Run MCP Validation,Validate token usage in captured visuals,mcp.call('design-system' 'validate_usage' visual),Validation report
+54,4,Compare Results,Compare with baseline screenshots,,Diff report
+54,5,Report Findings,Generate visual regression report with token compliance,,Test report

@@ -5,3 +5,17 @@
 *.swo
 .vscode/
 .idea/
+
+# [SKT] AI Artifacts
+.agent/instructions.md
+.agent/instructions/generated/
+.skt/meta/index.json
+
+# [SKT] Internal State
+.skt/archive
+.skt/tmp/
+ACTIVE_PLAN.md
+**/.DS_Store
+
+# [SKT] Learning Session Data
+features/skills/data/learning-session-*.json

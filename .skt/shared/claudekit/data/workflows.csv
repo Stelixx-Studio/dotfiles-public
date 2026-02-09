@@ -1,0 +1,56 @@
+id,name,category,description,phases,tools,template,complexity,auto_execution,auto_load_instructions,capability_group,mcp_servers
+1,plan,core,Create detailed implementation plan with parallel research (Spec/Plan hierarchy),Research|Context|Analyze|Plan|Verify,parallel-research.sh,implementation-plan.md,medium,3,true,essential,filesystem|brave-search|skt-knowledge
+2,cook,core,Implement feature with research and automated testing (Conductor-inspired Track),Initialize Track|Research|Context|Plan|Implement|Test|Review|Checkpoint,parallel-research.sh|auto-check.sh,,high,4,true,essential,filesystem|github|brave-search|typescript-ast|eslint-mcp|skt-knowledge
+3,code,core,Execute existing implementation plan with quality checks,Load Plan|Implement|Test|Verify,auto-check.sh,,medium,3,true,essential,filesystem|typescript-ast|eslint-mcp|skt-knowledge
+4,review,core,Code review against project standards and best practices (Powered by UI/UX Pro Max),Load Context|Analyze|Check Rules|Design Audit|Report,auto-check.sh,review-checklist.md,low,2,true,essential,filesystem|eslint-mcp|skt-knowledge
+5,test,core,Run test suite and report results without auto-fix,Setup|Run Tests|Report,,test-report.md,low,1,true,essential,filesystem|puppeteer
+6,brainstorm,core,Explore multiple solution approaches with trade-off analysis (Powered by UI/UX Pro Max),Research|Context|Explore|Compare|Recommend,parallel-research.sh,,medium,2,true,advanced,brave-search|skt-knowledge
+7,design,design,Design UI/UX dispatcher - routes to specific design workflow,Analyze Type|Route to Workflow,,,low,1,false,common,
+8,design-fast,design,Quick design mockups with image generation only (Powered by UI/UX Pro Max),Analyze|Style Research|Generate|Present,generate_image,,low,2,true,common,brave-search
+9,design-good,design,Production-quality UI/UX design with research,Initialize Track|Research|Plan|Implement|Test|Checkpoint,parallel-research.sh,,high,4,true,advanced,filesystem|brave-search
+10,design-3d,design,3D component design with Three.js and React Three Fiber,Research|Setup|Implement|Test,parallel-research.sh,,high,3,true,advanced,filesystem|brave-search
+11,fix,fix,General bug fix with analysis and verification,Analyze|Research|Fix|Test|Verify,,,medium,2,true,essential,filesystem|skt-knowledge
+12,fix-fast,fix,Quick bug fix with minimal research,Analyze|Fix|Test,,,low,2,true,common,filesystem
+13,fix-hard,fix,Complex bug fix with deep analysis and debugging,Initialize Track|Analyze|Research|Debug|Fix|Test|Verify|Checkpoint,parallel-research.sh,,high,4,true,advanced,filesystem|brave-search|skt-knowledge
+14,fix-ci,fix,Fix CI/CD pipeline issues,Analyze Logs|Research|Fix|Test,parallel-research.sh,,medium,3,true,advanced,filesystem|brave-search
+15,fix-logs,fix,Fix bugs from error logs analysis,Parse Logs|Analyze|Research|Fix|Test,parallel-research.sh,,medium,3,true,advanced,filesystem|brave-search
+16,fix-test,fix,Fix failing tests until all pass,Analyze Failures|Fix|Rerun|Verify,,,medium,2,true,advanced,filesystem|puppeteer
+17,git-commit,git,Create conventional commit message,Analyze Changes|Generate Message|Handle Changeset|Commit,,,low,1,false,common,filesystem|github
+18,git-commit-push,git,Commit and push changes with conventional message,Analyze Changes|Generate Message|Handle Changeset|Commit|Push,,,low,2,false,common,filesystem|github
+19,git-pr,git,Create pull request with description,Analyze Changes|Generate Title|Generate Description|Create PR|Verify,,,medium,1,false,common,filesystem|github
+20,git-cherry-pick,git,Cherry-pick commits with conflict resolution,Select Commits|Cherry Pick|Resolve Conflicts|Verify,,,medium,2,false,common,filesystem|github
+21,docs-init,docs,Initialize documentation structure,Analyze Project|Create Structure|Generate Templates,,,low,2,true,common,filesystem|mdx-processor
+22,docs-summarize,docs,Summarize documentation,Read Docs|Extract Key Points|Generate Summary,,,low,1,false,common,filesystem|mdx-processor
+23,docs-update,docs,Update documentation based on code changes,Analyze Changes|Update Docs|Verify,,,medium,2,true,common,filesystem|mdx-processor|skt-knowledge
+24,content-good,content,Marketing copywriting with research (Powered by UI/UX Pro Max),Research|CRO Intelligence|Analyze Audience|Write|Review,parallel-research.sh,,medium,3,false,common,brave-search
+25,content-cro,content,Conversion-focused content optimization,Research|Analyze Funnel|Write|Optimize,parallel-research.sh,,high,3,false,advanced,brave-search
+26,bootstrap,bootstrap,Bootstrap new project with parallel research,Initialize Track|Research|Plan|Setup|Verify|Checkpoint,parallel-research.sh,,high,4,true,common,filesystem|brave-search|package-json|dotenv-mcp
+27,bootstrap-auto,bootstrap,Autonomous bootstrap without user interaction,Research|Plan|Setup|Deploy,parallel-research.sh,,high,3,true,advanced,filesystem|brave-search|package-json
+28,skill,skill,Create or optimize workflow/skill documentation,Analyze|Design|Document|Test,,,medium,2,true,common,filesystem|skt-knowledge
+29,skill-create,skill,Create new skill workflow,Research|Design|Implement|Test,parallel-research.sh,,high,3,true,advanced,filesystem|brave-search|skt-knowledge
+30,skill-optimize,skill,Optimize existing skill workflow,Analyze|Identify Issues|Optimize|Test,,,medium,2,true,common,filesystem|skt-knowledge
+31,ask,other,Ask questions with context-aware answers,Analyze Question|Load Context|Research|Answer,parallel-research.sh,,low,1,context-dependent,common,skt-knowledge|brave-search
+32,skt:plan,core,Architect & plan features (Powered by Conductor Spec/Plan logic),Research|Context|Analyze|Plan|Verify,parallel-research.sh,implementation-plan.md,medium,3,true,essential,filesystem|brave-search|skt-knowledge
+33,skt:cook,core,Implement with AI & SKT Intelligence (Conductor-inspired Track),Initialize Track|Research|Context|Plan|Implement|Test|Review|Checkpoint,parallel-research.sh|auto-check.sh,,high,4,true,essential,filesystem|github|brave-search|typescript-ast|eslint-mcp|skt-knowledge
+34,skt:review,core,Professional SKT Code Review,Load Context|Analyze|Check Rules|Design Audit|Report,auto-check.sh,review-checklist.md,low,2,true,essential,filesystem|eslint-mcp|skt-knowledge
+35,orchestrator:flow,core,Coordinate multiple agents into strict Plan-Approve-Execute protocol,Scout|Context|Plan|Approve|Execute|Verify,agent_executor.py|auto-check.sh,,high,5,true,advanced,filesystem|github|skt-knowledge
+41,mcp:visual-test,utility,Visual regression testing via MCP browser,"Initialize\|Run MCP\|Compare\|Report",auto-check.sh,,medium,2,true,advanced,puppeteer|playwright
+42,mcp:docs-lookup,utility,External documentation research via MCP,Analyze\|Search\|Extract\|Report,parallel-research.sh,,medium,2,true,advanced,brave-search|skt-knowledge
+36,plans-init,plan,Initialize and organize the plans directory structure,Analyze Project|Create Structure|Generate Templates,,,low,2,true,common,filesystem
+37,plans-summarize,plan,Summarize active implementation plans and roadmap,Read Plans|Extract Key Points|Generate Summary,,,low,1,false,common,filesystem
+38,plans-update,plan,Update plan status and tasks based on code changes,Analyze Changes|Update Plans|Verify,,,medium,2,true,common,filesystem|skt-knowledge
+39,plans-archive,plan,Archive completed implementation plans,Move Plan|Update Docs|Verify,,,low,2,true,common,filesystem
+40,scout,core,Deep parallel search for context before planning,Analyze|Scout|Aggregate|Report,agent_executor.py|context_loader.py,,medium,2,true,essential,filesystem|brave-search|skt-knowledge
+43,mcp-verify,verification,Verify MCP implementation with Next.js test project,Setup Environment|Install Registry|Test Commands|Verify Integration|Health Check|Report,auto-check.sh,,high,4,true,advanced,filesystem|nextjs-server|typescript-ast|eslint-mcp
+44,clear,core,Secure context and prepare for clean execution state,Secure State|Archive Artifacts|Instruction,secure-context.py,,low,1,true,essential,filesystem
+45,debug,fix,Analyze and identify root cause of bugs with deep investigation,Analyze Code|Read Logs|Reproduce|Identify Root Cause|Report,debug-context.py,,medium,3,true,essential,filesystem|skt-knowledge
+46,ultrathink,core,Deep exploration mode for complex brainstorming with extended thinking,Initialize|Deep Research|Multi-Perspective Analysis|Synthesize|Present Options,parallel-research.sh,,high,4,true,advanced,brave-search|skt-knowledge
+
+47,mcp:query-token,design-system,Query design tokens from MCP server (spacing colors sizing etc),Determine Parameters|Call MCP Tool|Process Results|Present to User,,,low,2,false,common,design-system
+48,mcp:validate,design-system,Validate code compliance with design system rules,Analyze Code|Call MCP Tool|Report Issues|Suggest Fixes,,,medium,2,true,common,design-system
+49,mcp:suggest,design-system,AI-powered design token suggestions and recommendations,Parse Intent|Call MCP Tool|Rank Results|Present Suggestions,,,low,2,false,common,design-system
+50,mcp:analyze,design-system,Component compliance analysis with quality scoring,Load Component|Call MCP Tool|Calculate Score|Generate Report,,,medium,2,true,common,design-system
+51,mcp:compliance,design-system,Comprehensive design system compliance audit,Scan Files|Call MCP Tool|Aggregate Results|Generate Report,,,high,3,true,advanced,design-system
+52,mcp:research,design-system,Design token usage pattern analysis and research,Define Query|Call MCP Tool|Analyze Patterns|Find Opportunities,,,medium,2,true,common,design-system
+53,mcp:chat,design-system,Interactive design system assistant with multi-tool support,Initialize Context|Process Input|Call MCP Tool|Generate Response|Loop,,,low,2,false,common,design-system
+54,mcp:visual-test,design-system,Visual regression testing with token validation,Setup Environment|Capture Screenshots|Run MCP Validation|Compare Results|Report Findings,,,high,3,true,advanced,design-system|puppeteer

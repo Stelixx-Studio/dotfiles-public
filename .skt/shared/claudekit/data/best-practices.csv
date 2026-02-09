@@ -1,0 +1,66 @@
+category,practice,description,applies_to,priority
+typescript,No any type,Use proper TypeScript types instead of any,plan|cook|code|review,high
+typescript,Explicit return types,Always specify return types for functions,plan|cook|code|review,high
+typescript,Import types with type keyword,Use 'import type' for type-only imports,plan|cook|code|review,medium
+react,Server Components by default,Use Server Components unless client features needed,cook|code|review,high
+react,use client directive,Add 'use client' only when needed as first line,cook|code|review,high
+react,Explicit Props interface,Define Props interface with FC<Props>,cook|code|review,high
+file-org,Feature-first organization,Organize by features not by file type,plan|cook|code,high
+file-org,kebab-case naming,Use kebab-case for all files and folders,plan|cook|code,high
+file-org,Correct directory structure,Follow features/<name>/ structure,plan|cook|code,high
+imports,Absolute imports,Use @/ for imports not relative paths,cook|code|review,high
+imports,Type imports,Use 'import type' for type-only imports,cook|code|review,medium
+imports,Correct import order,React → @repo → types → local,cook|code|review,low
+i18n,No hardcoded strings,Use m.key() from @repo/i18n for all user-facing text,cook|code|review,high
+i18n,Add keys to en.json first,Add translation keys before using,cook|code,high
+i18n,Compile after adding keys,Run pnpm i18n:compile after adding keys,cook|code,high
+i18n,Parameterized messages,Use parameters for dynamic content,cook|code,medium
+error-handling,Try-catch for async,Wrap async operations in try-catch,cook|code,high
+error-handling,User-friendly errors,Show localized user-friendly error messages,cook|code,high
+error-handling,Loading states,Show loading states during async operations,cook|code,high
+error-handling,Error states,Display error states gracefully,cook|code,high
+error-handling,Empty states,Handle empty states,cook|code,medium
+accessibility,Semantic HTML,Use semantic HTML elements,cook|code|review,high
+accessibility,ARIA labels,Add ARIA labels for screen readers,cook|code,high
+accessibility,Keyboard navigation,Ensure keyboard navigation works,cook|code,medium
+accessibility,Color contrast,Meet WCAG AA contrast ratio 4.5:1,cook|code,medium
+accessibility,Alt text,Add alt text for all images,cook|code,high
+performance,Tree-shake imports,Import specific items not entire libraries,cook|code,medium
+performance,Code splitting,Split code for large components,cook|code,medium
+performance,Lazy loading,Lazy load images and heavy components,cook|code,medium
+performance,Next.js Image,Use Next.js Image component,cook|code,high
+security,No secrets in code,Use .env.local for secrets,cook|code,high
+security,Sanitize user input,Sanitize before using dangerouslySetInnerHTML,cook|code,high
+security,Server-side validation,Always validate on server,cook|code,high
+security,CSRF protection,Implement CSRF protection for forms,cook|code,high
+testing,Co-located tests,Place tests next to source files,cook|code,high
+testing,All tests passing,Ensure pnpm test passes,cook|code|review,high
+testing,80% coverage,Aim for 80%+ coverage on critical paths,cook|code,medium
+package-mgmt,Use pnpm only,Never use npm or yarn,cook|code,high
+package-mgmt,Run lint:fix,Run pnpm lint:fix before commit,cook|code|review,high
+package-mgmt,Run type-check,Run pnpm type-check before commit,cook|code|review,high
+architecture,"Clean Instructions V2","Use generated/ for CLI content, custom/ for user overrides. Modular features prevent context overload.","claudekit:plan|skt:evolve",high
+agent-optimization,"Modular Context Loading","Break instructions into small chunks (features/*.md) to allow agents to load relevant context only.","claudekit:plan",high
+compatibility,"Universal Agent Instructions","Generate platform-agnostic Markdown as source of truth, then compile to specific formats (.cursorrules, .copilot).","claudekit:plan",medium
+docs,Documentation with code,Update docs in the same commit as code changes,docs-update|cook|code,high
+docs,Link validation,Validate all documentation links before committing,docs-validate|review,high
+docs,Code examples,Ensure all code examples are tested and working,docs-update|docs-validate,high
+docs,API documentation,Document all public APIs with JSDoc,docs-update|cook|code,high
+docs,Breaking changes,Document breaking changes in CHANGELOG.md,docs-update|git-commit,high
+docs,Architecture diagrams,Update diagrams when architecture changes,docs-update|plan,medium
+docs,User-facing changes,Document all user-facing changes in docs and README,docs-update|cook,high
+docs,Migration guides,Provide migration guides for breaking changes,docs-update,high
+ui,No emoji icons,Use SVG icons (Heroicons/Lucide) instead of emojis,cook|code|review,high
+ui,Hover feedback,Add cursor-pointer and visual feedback to interactive items,cook|code,high
+ui,Smooth transitions,Use transition durations between 150-300ms,cook|code,medium
+ui,Contrast check,Ensure text contrast meets slate-900 (light) or higher,review,high
+ui,CRO Header,Use Benefit-driven headers for landing pages,content-good,high
+ui,Spacing,Use standard spacing (p-4, m-2) instead of random pixel values,review,medium
+ui,Color tokens,Always use primary-500 or brand-specific tokens,design-fast,high
+workflow,Spec before Plan,Always define "What/Why" (Spec) before detailing "How" (Plan),plan|cook|code,high
+workflow,Context-First,Load project context (product/tech-stack) before proposing changes,plan|cook|skt:evolve,high
+62,ui,Design System First,Always check design-system/MASTER.md for project-wide UI tokens and rules,plan|cook|review|code,high
+governance,Risk Classification,Classify task as Level 1/2/3 before planning,plan|cook|fix,high
+governance,Rule Compliance Audit,Explicitly list critical rules and compliance strategy,plan|cook|fix,high
+ui,Design System First,Check MASTER.md for tokens before styling,cook|code,high
+i18n,Zero hardcoded strings,Ensure all JSX text uses m.key(),cook|code|review,high

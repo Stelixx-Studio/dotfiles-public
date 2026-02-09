@@ -1,0 +1,126 @@
+#!/usr/bin/env python3
+import argparse
+import subprocess
+import json
+import os
+import sys
+
+# 🚨 AUTO-GENERATED - DO NOT EDIT 🚨 Source: features/agents/templates/rpi-orchestrator.py
+
+CONFIG_PATH = ".skt/config.json"
+
+def load_config():
+    if not os.path.exists(CONFIG_PATH):
+        print(f"⚠️  Config not found at {CONFIG_PATH}. Using fallback.")
+        return {}
+    try:
+        with open(CONFIG_PATH, 'r') as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        print(f"❌ Error decoding {CONFIG_PATH}")
+        sys.exit(1)
+
+def get_agent_command(config, role_name):
+    # 1. Get Agent Tool Name from 'agents' section
+    agent_config = config.get("agents", {}).get(role_name, {})
+    tool_name = agent_config.get("tool")
+    
+    if not tool_name:
+        # Fallback defaults if config is missing
+        defaults = {
+            "implementer": "opencode",
+            "planner": "antigravity",
+            "researcher": "antigravity"
+        }
+        tool_name = defaults.get(role_name)
+    
+    # 2. Get Tool Specs from 'tools' section
+    tool_spec = config.get("tools", {}).get(tool_name, {})
+    return tool_name, tool_spec.get("command")
+
+def run_command(command, dry_run=False):
+    print(f"🚀 Executing: {command}")
+    if dry_run:
+        return
+    try:
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Error executing command: {e}")
+        sys.exit(1)
+
+def phase_research(args, config):
+    print("🔍 [Phase 1: Research] Starting...")
+    target = args.target or "current task"
+    cmd = f".skt/shared/claudekit/scripts/parallel-research.sh \"{target}\""
+    run_command(cmd, args.dry_run)
+    print("✅ Research complete.")
+
+def phase_plan(args, config):
+    print("📝 [Phase 2: Plan] Starting...")
+    target = args.target or "current task"
+    cmd = f"python3 .skt/shared/claudekit/scripts/query-workflow.py skt:plan \"{target}\""
+    run_command(cmd, args.dry_run)
+    print("✅ Planning complete.")
+
+def phase_implement(args, config):
+    print("🔨 [Phase 3: Implement] Starting...")
+    
+    # Resolve Agent from Config
+    start_agent = args.agent  # CLI override
+    role = "implementer"
+    
+    if start_agent:
+        tool_name = start_agent
+        # Quick lookup for CLI override
+        tool_command = config.get("tools", {}).get(tool_name, {}).get("command")
+    else:
+        tool_name, tool_command = get_agent_command(config, role)
+
+    if not tool_command:
+        # Hardcoded fallbacks if config completely fails
+        if tool_name == "opencode": tool_command = "opencode"
+        elif tool_name == "gemini": tool_command = "gemini"
+        elif tool_name == "aider": tool_command = "aider"
+        else:
+             print(f"❌ Unknown tool: {tool_name}")
+             sys.exit(1)
+
+    plan_file = "implementation_plan.md"
+    if not os.path.exists(plan_file) and not args.dry_run:
+        print(f"❌ '{plan_file}' not found. Run Phase 2 first.")
+        sys.exit(1)
+
+    print(f"🤖 Agent: {tool_name} (Command: {tool_command})")
+    
+    # Construct final command based on tool type
+    if tool_name == "opencode":
+         print("🚀 Launching OpenCode Agent...")
+         cmd = f"{tool_command} run \"[SYSTEM: Implementer Agent] Read {plan_file} and execute changes. You have permission to edit files.\""
+    elif tool_name == "aider":
+         cmd = f"{tool_command} --message \"Implement changes from {plan_file}\""
+    elif tool_name == "gemini":
+         cmd = f"{tool_command} \"Implement changes from {plan_file}\""
+    else:
+        cmd = f"{tool_command} \"{plan_file}\""
+
+    run_command(cmd, args.dry_run)
+
+def main():
+    parser = argparse.ArgumentParser(description="Stelixx RPI Orchestrator")
+    parser.add_argument("--phase", choices=["research", "plan", "implement"], required=True)
+    parser.add_argument("--target", help="Research/Plan target")
+    parser.add_argument("--agent", help="Override implementer agent")
+    parser.add_argument("--dry-run", action="store_true")
+
+    args = parser.parse_args()
+    config = load_config()
+
+    if args.phase == "research":
+        phase_research(args, config)
+    elif args.phase == "plan":
+        phase_plan(args, config)
+    elif args.phase == "implement":
+        phase_implement(args, config)
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,1998 @@
+id,category,tags,content,priority,triggers
+api-routes-request-response,Backend,"backend,api,api-routes","### Request/Response
+**Rule**: Use standard `Request` and `Response` objects where possible, or `NextRequest/NextResponse` for advanced features.
+
+**Example**:
+
+```typescript
+import { NextResponse } from 'next/server';
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+  
+  if (!id) {
+    return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
+  }
+
+  const data = await db.query(id);
+  return NextResponse.json(data);
+}
+```",medium,
+api-routes-validation,Backend,"backend,api,api-routes","### Validation
+**Rule**: VALIDATE ALL INPUTS using Zod. Never trust client data.
+
+**Example**:
+
+```typescript
+import { z } from 'zod';
+
+const bodySchema = z.object({
+  email: z.string().email(),
+  role: z.enum(['user', 'admin']),
+});
+
+export async function POST(req: Request) {
+  const body = await req.json();
+  const result = bodySchema.safeParse(body);
+
+  if (!result.success) {
+    return NextResponse.json(result.error.flatten(), { status: 400 });
+  }
+
+  // Proceed with result.data
+}
+```",medium,
+api-routes-error-handling,Backend,"backend,api,api-routes","### Error Handling
+**Rule**: Use try/catch blocks and return standardized error responses.
+
+**Example**:
+
+```typescript
+export async function POST(req: Request) {
+  try {
+    // ... logic
+  } catch (error) {
+    console.error('API Error:', error);
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
+  }
+}
+```",medium,
+api-routes-http-methods,Backend,"backend,api,api-routes","### Http Methods
+**Rule**: Export named functions for each HTTP method (GET, POST, PUT, DELETE).
+
+```typescript
+export async function GET() {}
+export async function POST() {}
+export async function PUT() {}
+export async function DELETE() {}
+```",medium,
+prisma-model-definitions,Backend,"backend,api,prisma","### Model Definitions
+**Rule**: Use clear, consistent naming
+
+**Example**:
+
+```prisma
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```",medium,schema.prisma
+prisma-relations,Backend,"backend,api,prisma","### Relations
+**Rule**: Define bidirectional relations
+
+**Example**:
+
+```prisma
+model Post {
+  id       String @id @default(cuid())
+  title    String
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+}
+```
+
+## Query Patterns",medium,schema.prisma
+prisma-type-safe-queries,Backend,"backend,api,prisma","### Type-Safe Queries
+**Rule**: Use Prisma Client with TypeScript
+
+**Example**:
+
+```typescript
+const user = await prisma.user.findUnique({
+  where: { id },
+  include: { posts: true },
+});
+```",medium,schema.prisma
+prisma-transactions,Backend,"backend,api,prisma","### Transactions
+**Rule**: Use transactions for related operations
+
+**Example**:
+
+```typescript
+await prisma.$transaction([
+  prisma.user.create({ data: userData }),
+  prisma.post.create({ data: postData }),
+]);
+```
+
+## Best Practices",medium,schema.prisma
+prisma-soft-deletes,Backend,"backend,api,prisma","### Soft Deletes
+**Rule**: Use soft deletes for important data
+
+**Example**:
+
+```prisma
+model User {
+  id        String    @id @default(cuid())
+  deletedAt DateTime?
+}
+```
+
+```typescript
+// Soft delete
+await prisma.user.update({
+  where: { id },
+  data: { deletedAt: new Date() },
+});
+
+// Query non-deleted
+const users = await prisma.user.findMany({
+  where: { deletedAt: null },
+});
+```",medium,schema.prisma
+prisma-pagination,Backend,"backend,api,prisma","### Pagination
+**Rule**: Use cursor-based pagination for large datasets
+
+**Example**:
+
+```typescript
+const posts = await prisma.post.findMany({
+  take: 10,
+  skip: 1,
+  cursor: { id: lastPostId },
+  orderBy: { createdAt: 'desc' },
+});
+```",medium,schema.prisma
+supabase-example-server-component,Backend,"backend,api,supabase","### Example (Server Component)
+```tsx
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import type { Database } from '@/types/supabase';
+
+export default async function Page() {
+  const supabase = createServerComponentClient<Database>({ cookies });
+  const { data } = await supabase.from('posts').select();
+  
+  return <pre>{JSON.stringify(data, null, 2)}</pre>;
+}
+```",medium,
+trpc-define-routers,Backend,"backend,api,trpc","### Define Routers
+**Rule**: Use type-safe routers
+
+**Example**:
+
+```typescript
+import { router, publicProcedure } from './trpc';
+import { z } from 'zod';
+
+export const userRouter = router({
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      return await db.user.findUnique({ where: { id: input.id } });
+    }),
+});
+```",medium,
+trpc-client-usage,Backend,"backend,api,trpc","### Client Usage
+**Rule**: Use tRPC client hooks
+
+**Example**:
+
+```typescript
+import { trpc } from '@/utils/trpc';
+
+function UserProfile({ userId }: Props) {
+  const { data: user } = trpc.user.getById.useQuery({ id: userId });
+  
+  return <div>{user?.name}</div>;
+}
+```
+
+## Best Practices",medium,
+trpc-input-validation,Backend,"backend,api,trpc","### Input Validation
+**Rule**: Always validate inputs with Zod
+
+**Example**:
+
+```typescript
+const createUserInput = z.object({
+  email: z.string().email(),
+  name: z.string().min(1).max(100),
+});
+
+export const userRouter = router({
+  create: publicProcedure
+    .input(createUserInput)
+    .mutation(async ({ input }) => {
+      return await db.user.create({ data: input });
+    }),
+});
+```",high,
+trpc-error-handling,Backend,"backend,api,trpc","### Error Handling
+**Rule**: Use TRPCError for consistent errors
+
+**Example**:
+
+```typescript
+import { TRPCError } from '@trpc/server';
+
+export const userRouter = router({
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      const user = await db.user.findUnique({ where: { id: input.id } });
+      
+      if (!user) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'User not found',
+        });
+      }
+      
+      return user;
+    }),
+});
+```",medium,
+trpc-middleware,Backend,"backend,api,trpc","### Middleware
+**Rule**: Use middleware for auth and logging
+
+**Example**:
+
+```typescript
+const isAuthed = middleware(async ({ ctx, next }) => {
+  if (!ctx.session?.user) {
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
+  }
+  
+  return next({
+    ctx: {
+      user: ctx.session.user,
+    },
+  });
+});
+
+export const protectedProcedure = publicProcedure.use(isAuthed);
+```",medium,
+react-query-example,Data Fetching,"data,react-query","### Example
+```ts
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
+export function useTodos() {
+  return useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos,
+  });
+}
+
+export function useAddTodo() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: addTodo,
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
+}
+```",medium,
+swr-example,Data Fetching,"data,swr","### Example
+```ts
+import useSWR from 'swr';
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+export function useUser(id: string) {
+  const { data, error, isLoading } = useSWR(['/api/users', id], ([url, id]) => fetcher(`${url}/${id}`));
+
+  return {
+    user: data,
+    isLoading,
+    isError: error,
+  };
+}
+```",medium,
+overview-architecture,Other,overview,"### Architecture
+**Components**:
+- State: `hooks/use-${kebabName}.ts`
+- UI: `components/`",medium,
+overview-patterns,Other,overview,"### Patterns
+**Rule**: Keep components focused and reusable
+
+**Example**:
+
+```typescript
+// Feature-specific component patterns
+export const ${FeatureName}Component: FC<Props> = ({ data }) => {
+  return <div>{data}</div>
+}
+```",medium,
+overview-hooks,Other,overview,"### Hooks
+**Rule**: Extract reusable logic into custom hooks
+
+**Example**:
+
+```typescript
+function use${FeatureName}() {
+  // Custom hook logic
+}
+```",medium,
+overview-api-integration,Other,overview,"### API Integration
+**Rule**: Use consistent API patterns",medium,
+overview-types,Other,overview,"### Types
+**Rule**: Define clear type interfaces",medium,
+project-rules-1-internationalization-i18n,Other,project-rules,"### 1. Internationalization (i18n)
+**Rule**: ALL user-facing text MUST use `m.key()` from `@repo/i18n`
+
+**Quick Check**:
+
+```bash
+# ❌ This should return 0
+grep -r '<h1>""' apps/web/features/
+```
+
+**Load detailed**: `.agent/instructions/features/i18n.md`
+
+---",high,
+project-rules-2-navigation,Other,project-rules,"### 2. Navigation
+**Rule**: ALWAYS use `useAppNavigation` for routing
+
+**Pattern**:
+
+```typescript
+// ✅ DO
+const { navigateTo, routes } = useAppNavigation()
+navigateTo(routes.dashboard)
+
+// ❌ DON'T
+const router = useRouter()
+router.push(""/dashboard"")
+```
+
+**Load detailed**: `.agent/instructions/features/navigation/overview.md`
+
+---",high,
+project-rules-3-type-safety,Other,project-rules,"### 3. Type Safety
+**Rules**:
+
+- Never `any` → Use proper types
+- Explicit return types → Always
+- Import API types → From `@/app/actions/` (Server Actions) or `@/lib/types`
+
+**Quick Check**:
+
+```bash
+# ❌ This should return 0
+grep -r "": any"" apps/web/features/
+```
+
+**Load detailed**: `.agent/instructions/development/typescript.md`
+
+---",high,
+project-rules-4-api-data-fetching,Other,project-rules,"### 4. API & Data Fetching
+**Rule**: ALWAYS use `apiClient` (Ky) - NEVER `fetch()` or `axios`
+
+- ✅ `import { apiClient } from ""@/lib/api/client""`
+- ✅ `apiClient.get(API_CONFIG.ENDPOINTS.AUTH.ME).json()`
+- ❌ NO hardcoded `/api/v1/` in URLs
+- ❌ NO `fetch('endpoint')`
+
+---",high,
+project-rules-5-library-configuration,Other,project-rules,"### 5. Library Configuration
+**Pattern**: Provider in `packages/ui/src/providers/` or `apps/web/lib/providers/`
+
+- Always `""use client""` for providers
+- Use `useState` for initialization
+- 📖 [Library Config Guide](./infrastructure/library-config.md)
+
+---",high,
+project-rules-quality-gate-self-healing,Other,project-rules,"### 6. Universal Self-Healing Mandate
+**Rule**: You are STRICTLY FORBIDDEN from ending a task or marking a plan as complete if any verification command (like `verify.py` or `auto-check.sh`) fails.
+
+**Requirement**:
+1. **Immediate Reaction**: If a test, lint, or type check fails, you must treat it as a critical blocker.
+2. **Looping**: Enter a mandatory loop: Analyze logs → Identify root cause → Implement fix → Re-verify.
+3. **Non-Negotiable**: No task is complete until `verify.py` returns success or the user explicitly waives the requirement.
+
+---",high,
+project-rules-quick-pattern-selection,Other,project-rules,"### Quick Pattern Selection
+```
+WHAT ARE YOU BUILDING?
+│
+├─ Linear flow with multiple steps?
+│   → Multi-Step Wizard
+│   Examples: Audit, Onboarding
+│   Load: features/overview.md
+│   Path: apps/web/features/<name>/
+│
+├─ Metrics and data visualization?
+│   → Dashboard/Analytics
+│   Examples: Analytics, Insights
+│   Load: features/overview.md
+│   Path: apps/web/features/<name>/
+│
+├─ Manage entities (list, create, edit, delete)?
+│   → CRUD Interface
+│   Examples: Reports, Settings
+│   Load: features/overview.md
+│   Path: apps/web/features/<name>/
+│
+└─ Simple single-purpose feature?
+    → Simple Feature
+    Examples: Contact, Pricing
+    Load: features/overview.md
+    Path: apps/web/features/<name>/
+```
+
+**Load full guide**: `.agent/instructions/features/README.md`
+
+---
+
+## 🎯 Quick Decision Trees",medium,
+project-rules-where-does-this-code-go,Other,project-rules,"### Where does this code go?
+```
+WHAT ARE YOU CREATING?
+│
+├─ UI Component
+│   ├─ Used by ONE feature?
+│   │   → apps/web/features/<name>/components/
+│   ├─ Used by MULTIPLE features?
+│   │   → packages/ui/src/components/ (if generic)
+│   │   → apps/web/components/ui/ (if app-specific)
+│   └─ Layout component?
+│       → apps/web/components/layouts/
+│
+├─ Logic (Hook/Utility)
+│   ├─ Feature-specific?
+│   │   → apps/web/features/<name>/hooks/
+│   └─ Shared across features?
+│       → apps/web/lib/
+│
+├─ Types
+│   ├─ API types?
+│   │   → Import from apps/web/app/actions/<name>.ts
+│   ├─ Feature types?
+│   │   → apps/web/features/<name>/types/
+│   └─ Shared types?
+│       → apps/web/lib/types.ts
+│
+└─ Data/Config
+│   ├─ Feature data?
+│   │   → apps/web/features/<name>/content/
+│   └─ Global config?
+│       → apps/web/lib/config/
+```",medium,
+project-rules-server-or-client-component,Other,project-rules,"### Server or Client Component?
+```
+DOES IT NEED...
+│
+├─ Data fetching?           → Server Component
+├─ Browser APIs?            → Client Component
+├─ Event handlers?          → Client Component
+├─ React hooks?             → Client Component
+├─ localStorage/window?     → Client Component
+└─ None of the above?       → Server Component (default)
+```
+
+---
+
+## 📋 Feature Integration Rules",medium,
+project-rules-rule-1-type-imports,Other,project-rules,"### Rule 1: Type Imports
+```typescript
+// ✅ DO: Import from server actions
+import type { User } from ""@/app/actions/auth""
+
+// ❌ DON'T: Redefine types
+interface User {
+  id: string
+} // Wrong!
+```",medium,
+project-rules-rule-2-component-reuse,Other,project-rules,"### Rule 2: Component Reuse
+```typescript
+// ✅ DO: Export via index
+// apps/web/features/audit/index.ts
+export { BrandOverviewCard } from ""./components/audit-cards""
+
+// ✅ DO: Import from feature index
+import { BrandOverviewCard } from ""@/features/audit""
+
+// ❌ DON'T: Deep imports
+import { BrandOverviewCard } from ""@/features/audit/components/audit-cards/brand-overview-card""
+```",medium,
+project-rules-rule-3-feature-boundaries,Other,project-rules,"### Rule 3: Feature Boundaries
+```typescript
+// ✅ DO: Clear separation
+apps/web/features/audit/        # Audit execution
+apps/web/features/analytics/    # Audit data analysis
+
+// ❌ DON'T: Mix concerns
+apps/web/features/audit/components/analytics-trend.tsx  // Wrong!
+```
+## ✅ Pre-Commit Checklist
+
+**Run these commands** (copy-paste):
+
+```bash
+pnpm lint:fix && pnpm lint && pnpm type-check && pnpm test
+```
+
+**Must show**:
+
+- ✅ 0 lint errors, 0 warnings
+- ✅ 0 type errors
+- ✅ All tests passing
+- [ ] No `any` types
+- [ ] Imported API types
+- [ ] Server Component by default
+- [ ] `""use client""` only when needed
+- [ ] Files in correct location (apps/web/features/...)
+
+---
+
+**Version**: 1.1.1 (Monorepo Aware)",high,
+readme-for-product-developers,Other,readme,"### For Product Developers
+👉 **[Features Overview](./features/README.md)** - Understand what the app does
+
+**Core Features**:
+- [Audit / SEO Analysis](./features/audit/overview.md)
+- [Authentication](./features/auth/overview.md)
+- [Reports](./features/reports/overview.md)",medium,
+readme-for-all-developers,Other,readme,"### For All Developers
+👉 **[Development Guidelines](./development/README.md)** - Coding standards
+
+**Essential Reading**:
+- [TypeScript Rules](./development/typescript/rules.md)
+- [React Components](./development/react/components.md)
+- [File Organization](./development/patterns/file-organization.md)",medium,
+readme-for-devops-deployment,Other,readme,"### For DevOps/Deployment
+👉 **[Core Infrastructure](./infrastructure/overview.md)** - Setup and deployment
+
+## 📚 Documentation Structure",medium,
+readme-features-features,Other,readme,"### 🎯 [Features](./features/)
+Product features and user flows.
+- **[Audit](./features/audit/)**
+- **[Auth](./features/auth/)**",medium,
+readme-development-development,Other,readme,"### 💻 [Development](./development/)
+Coding standards and patterns.
+- **[TypeScript](./development/typescript/)**
+- **[React](./development/react/)**",medium,
+readme-infrastructure-infrastructure,Other,readme,"### 🔧 [Infrastructure](./infrastructure/)
+Setup and operations.
+- **[Deployment](./infrastructure/deployment.md)**
+- **[Environment](./infrastructure/environment.md)**
+
+## 🎯 Find What You Need
+
+**...what the app does**
+→ [Features Overview](./features/README.md)
+
+**...where to put my code**
+→ [File Organization](./development/patterns/file-organization.md)
+
+**...how to write type-safe code**
+→ [TypeScript Rules](./development/typescript/rules.md)
+
+**...how to build a component**
+→ [React Components](./development/react/components.md)
+
+**...how to deploy**
+→ [Deployment Overview](./infrastructure/deployment.md)
+
+## 🏗️ Project Architecture",medium,
+readme-technology-stack,Other,readme,"### Technology Stack
+- **Framework**: Next.js 15 (App Router) + React 19
+- **Language**: TypeScript 5.9 (strict mode)
+- **Styling**: Tailwind CSS
+- **i18n**: Paraglide-JS
+- **Monorepo**: Turborepo
+- **Testing**: Vitest + Playwright",medium,
+readme-core-principles,Other,readme,"### Core Principles
+1. **Feature-First Organization**: `features/<name>/`
+2. **Type Safety First**: No `any`, strict types
+3. **Server-First**: Server Components by default
+
+## 📞 Support
+- **Feature Questions**: See [Features Documentation](./features/)
+- **Development Help**: See [Development Guidelines](./development/)
+- **Deployment Issues**: See [Infrastructure](./infrastructure/)
+
+**Version**: 1.0.0 (CLI Generated)",medium,
+slash-commands-available-commands,Other,slash-commands,"### Available Commands
+| Command | Purpose |
+|---------|---------|
+| `ask`   | Ask questions about the codebase (context-aware) |
+| `plan`  | detailed implementation plan |
+| `prioritize` | prioritization plan |
+| `cook`  | Implement features/code based on plan |
+| `fix`   | Debug and fix issues |
+| `fix-hard` | Deep debugging for complex/hard issues |
+| `learn` | Update instructions/knowledge base |
+| `review` | Code review and feedback |
+| `test` | Generate and run tests |",medium,
+slash-commands-examples,Other,slash-commands,"### Examples
+```bash
+# Planning a new feature
+@[/claudekit] plan ""Add user profile settings""
+
+# Implementing code
+@[/claudekit] cook ""Implement profile form component""
+
+# Fixing a bug
+@[/claudekit] fix ""Profile image upload fails with 403""
+
+# Hard fix (deep analysis)
+@[/claudekit] fix-hard ""Memory leak in data table""
+
+# Asking questions
+@[/claudekit] ask ""How does the auth flow work?""
+```
+
+## Adding Custom Workflows
+
+You can add project-specific workflows in `.agent/workflows/`.
+
+1. Create a markdown file: `.agent/workflows/my-workflow.md`
+2. Define the workflow steps
+3. Invoke it: `@[/my-workflow]`
+
+---
+
+**Version**: 1.1.1 (Monorepo Aware)",medium,
+accessibility-use-semantic-elements,Core,"shared,accessibility","### Use Semantic Elements
+**Rule**: Use semantic HTML elements
+
+**Example**:
+```html
+<article>
+  <h1>Title</h1>
+  <p>Content</p>
+</article>
+```
+
+## ARIA",medium,
+accessibility-aria-labels,Core,"shared,accessibility","### ARIA Labels
+**Rule**: Add ARIA labels for screen readers
+
+**Example**:
+```html
+<button aria-label=""Close menu"">
+  <IconX />
+</button>
+```",medium,
+accessibility-alt-text,Core,"shared,accessibility","### Alt Text
+**Rule**: Add alt text for all images
+
+**Example**:
+```html
+<img src=""logo.png"" alt=""Company logo"" />
+```
+
+## Keyboard Navigation",medium,
+accessibility-keyboard-support,Core,"shared,accessibility","### Keyboard Support
+**Rule**: Ensure keyboard navigation works
+
+**Example**:
+```typescript
+onKeyDown={(e) => e.key === 'Enter' && handleClick()}
+```
+
+## Color Contrast",medium,
+accessibility-wcag-aa-compliance,Core,"shared,accessibility","### WCAG AA Compliance
+**Rule**: Meet WCAG AA contrast ratio 4.5:1
+
+**Example**:
+```
+Use color contrast checker tools
+```",medium,
+best-practices-no-magic-values,Core,"shared,best-practices","### No Magic Values
+**Rule**: Use constants instead of magic values
+
+**Example**:
+
+```typescript
+// ✅ Good
+const MAX_RETRIES = 3
+const TIMEOUT_MS = 5000
+
+// ❌ Bad
+if (retries > 3) { }
+setTimeout(fn, 5000)
+```",high,
+best-practices-error-handling,Core,"shared,best-practices","### Error Handling
+**Rule**: Always handle errors explicitly
+
+**Example**:
+
+```typescript
+// ✅ Good
+try {
+  await fetchData()
+} catch (error) {
+  console.error('Failed to fetch:', error)
+  throw new Error('Data fetch failed')
+}
+
+// ❌ Bad
+await fetchData() // No error handling
+```
+
+## Performance",high,
+best-practices-avoid-premature-optimization,Core,"shared,best-practices","### Avoid Premature Optimization
+**Rule**: Optimize only when needed, measure first",high,
+best-practices-use-memoization-wisely,Core,"shared,best-practices","### Use Memoization Wisely
+**Rule**: Only memoize expensive computations
+
+**Example**:
+
+```typescript
+// ✅ Good - expensive computation
+const expensiveValue = useMemo(() => {
+  return heavyComputation(data)
+}, [data])
+
+// ❌ Bad - simple computation
+const sum = useMemo(() => a + b, [a, b])
+```
+
+## Security",high,
+best-practices-environment-variables,Core,"shared,best-practices","### Environment Variables
+**Rule**: Never commit secrets
+
+**Example**:
+
+```typescript
+// ✅ Good
+const apiKey = process.env.API_KEY
+
+// ❌ Bad
+const apiKey = 'sk-1234567890'
+```",high,
+best-practices-input-validation,Core,"shared,best-practices","### Input Validation
+**Rule**: Always validate user input
+
+**Example**:
+
+```typescript
+// ✅ Good
+const schema = z.object({
+  email: z.string().email(),
+  age: z.number().min(0).max(120)
+})
+
+const validated = schema.parse(input)
+```",high,
+eslint-strict-mode,Core,"shared,eslint","### Strict Mode
+**Rule**: Enable all strict rules
+
+**Example**:
+
+```json
+{
+  ""extends"": [
+    ""next/core-web-vitals"",
+    ""plugin:@typescript-eslint/recommended""
+  ],
+  ""rules"": {
+    ""@typescript-eslint/no-explicit-any"": ""error"",
+    ""@typescript-eslint/no-unused-vars"": ""error""
+  }
+}
+```
+
+## Common Rules",medium,
+eslint-no-any,Core,"shared,eslint","### No Any
+**Rule**: Never use any type
+
+**ESLint**: `@typescript-eslint/no-explicit-any: error`",medium,
+eslint-no-unused-vars,Core,"shared,eslint","### No Unused Vars
+**Rule**: Remove unused variables
+
+**ESLint**: `@typescript-eslint/no-unused-vars: error`",medium,
+eslint-explicit-return-types,Core,"shared,eslint","### Explicit Return Types
+**Rule**: Specify return types for functions
+
+**ESLint**: `@typescript-eslint/explicit-function-return-type: warn`",medium,
+git-feature-first,Core,"shared,git","### Feature First
+**Rule**: Organize by features, not by type
+
+**Example**:
+
+```
+✅ Good:
+features/
+  auth/
+    components/
+    hooks/
+    utils/
+  dashboard/
+    components/
+    hooks/
+
+❌ Bad:
+components/
+  AuthForm.tsx
+  Dashboard.tsx
+hooks/
+  useAuth.ts
+  useDashboard.ts
+```",medium,
+git-kebab-case,Core,"shared,git","### Kebab Case
+**Rule**: Use kebab-case for file names
+
+**Example**:
+
+```
+✅ Good: user-profile.tsx, api-client.ts
+❌ Bad: UserProfile.tsx, apiClient.ts
+```
+
+## Import Patterns",medium,
+git-absolute-imports,Core,"shared,git","### Absolute Imports
+**Rule**: Use absolute imports with @ alias
+
+**Example**:
+
+```typescript
+// ✅ Good
+import { Button } from '@/components/ui/button'
+import { useAuth } from '@/features/auth/hooks'
+
+// ❌ Bad
+import { Button } from '../../../components/ui/button'
+```
+
+## Commit Messages",medium,
+git-conventional-commits,Core,"shared,git","### Conventional Commits
+**Rule**: Use conventional commit format
+
+**Example**:
+
+```
+feat(auth): add login form
+fix(api): handle timeout errors
+docs(readme): update installation steps
+```",medium,
+security-no-secrets-in-code,Core,"shared,security","### No Secrets in Code
+**Rule**: Never commit secrets - use .env.local
+
+**Example**:
+```bash
+# .env.local
+NEXT_PUBLIC_API_KEY=xxx
+```
+
+## Input Sanitization",high,
+security-sanitize-user-input,Core,"shared,security","### Sanitize User Input
+**Rule**: Sanitize before using dangerouslySetInnerHTML
+
+**Example**:
+```typescript
+import DOMPurify from 'dompurify'
+const clean = DOMPurify.sanitize(html)
+```
+
+## Server-Side Validation",high,
+security-always-validate-on-server,Core,"shared,security","### Always Validate on Server
+**Rule**: Always validate on server
+
+**Example**:
+```typescript
+// Server Action
+export async function createUser(data: FormData) {
+  // Validate here
+}
+```
+
+## CSRF Protection",high,
+security-use-csrf-tokens,Core,"shared,security","### Use CSRF Tokens
+**Rule**: Implement CSRF protection for forms
+
+**Example**:
+```
+Use Next.js built-in CSRF protection
+```",high,
+testing-co-located-tests,Core,"shared,testing","### Co-Located Tests
+**Rule**: Place tests next to source files
+
+**Example**:
+```
+user-profile.tsx
+user-profile.test.tsx
+```",medium,
+testing-all-passing,Core,"shared,testing","### All Passing
+**Rule**: Ensure all tests pass
+
+**Example**:
+```bash
+pnpm test
+```",medium,
+testing-minimum-coverage,Core,"shared,testing","### Minimum Coverage
+**Rule**: Aim for 80%+ coverage on critical paths
+
+**Example**:
+```bash
+pnpm test:coverage
+```",medium,
+typescript-no-any-type,Core,"shared,typescript","### No Any Type
+**Rule**: Never use `any` type - use `unknown` or proper types
+
+**Example**:
+
+```typescript
+// ❌ Bad
+function process(data: any) {
+  return data.value;
+}
+
+// ✅ Good
+function process(data: unknown) {
+  if (typeof data === 'object' && data !== null && 'value' in data) {
+    return (data as { value: string }).value;
+  }
+  throw new Error('Invalid data');
+}
+```",medium,"*.ts,*.tsx"
+typescript-explicit-return-types,Core,"shared,typescript","### Explicit Return Types
+**Rule**: Always specify return types for functions
+
+**Example**:
+
+```typescript
+// ❌ Bad
+function calculate(a: number, b: number) {
+  return a + b;
+}
+
+// ✅ Good
+function calculate(a: number, b: number): number {
+  return a + b;
+}
+```",high,"*.ts,*.tsx"
+typescript-type-keyword,Core,"shared,typescript","### Type Keyword
+**Rule**: Use `type` for unions/intersections, `interface` for object shapes
+
+**Example**:
+
+```typescript
+// ✅ Use type for unions
+type Status = 'pending' | 'success' | 'error';
+
+// ✅ Use interface for objects
+interface User {
+  id: string;
+  name: string;
+}
+```
+
+## Type Assertions",medium,"*.ts,*.tsx"
+typescript-safe-assertions,Core,"shared,typescript","### Safe Assertions
+**Rule**: Use type guards instead of assertions when possible
+
+**Example**:
+
+```typescript
+// ❌ Avoid assertions
+const value = data as string;
+
+// ✅ Use type guards
+function isString(value: unknown): value is string {
+  return typeof value === 'string';
+}
+
+if (isString(data)) {
+  // TypeScript knows data is string here
+  console.log(data.toUpperCase());
+}
+```
+
+## Enums",medium,"*.ts,*.tsx"
+typescript-const-enums,Core,"shared,typescript","### Const Enums
+**Rule**: Use const enums for better tree-shaking
+
+**Example**:
+
+```typescript
+// ✅ Good
+const enum Status {
+  Pending = 'PENDING',
+  Success = 'SUCCESS',
+  Error = 'ERROR'
+}
+
+// Usage
+const status: Status = Status.Pending;
+```",medium,"*.ts,*.tsx"
+typescript-string-enums,Core,"shared,typescript","### String Enums
+**Rule**: Prefer string enums over numeric for better debugging
+
+**Example**:
+
+```typescript
+// ✅ Good - values are clear
+enum LogLevel {
+  Debug = 'DEBUG',
+  Info = 'INFO',
+  Error = 'ERROR'
+}
+
+// ❌ Avoid - numeric values unclear
+enum LogLevel {
+  Debug,
+  Info,
+  Error
+}
+```
+
+## Import Patterns",medium,"*.ts,*.tsx"
+typescript-type-imports,Core,"shared,typescript","### Type Imports
+**Rule**: Use `import type` for type-only imports
+
+**Example**:
+
+```typescript
+// ✅ Good
+import type { User } from './types';
+import { fetchUser } from './api';
+
+// ❌ Bad - imports value when only type needed
+import { User } from './types';
+```",medium,"*.ts,*.tsx"
+typescript-import-order,Core,"shared,typescript","### Import Order
+**Rule**: Group imports: external → internal → types
+
+**Example**:
+
+```typescript
+// ✅ Good order
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import type { User } from '@/types';
+```
+
+## Common Patterns",medium,"*.ts,*.tsx"
+typescript-utility-types,Core,"shared,typescript","### Utility Types
+**Rule**: Use built-in utility types
+
+**Example**:
+
+```typescript
+// ✅ Use Partial for optional fields
+type PartialUser = Partial<User>;
+
+// ✅ Use Pick for subset
+type UserPreview = Pick<User, 'id' | 'name'>;
+
+// ✅ Use Omit to exclude fields
+type UserWithoutPassword = Omit<User, 'password'>;
+```",medium,"*.ts,*.tsx"
+typescript-generic-constraints,Core,"shared,typescript","### Generic Constraints
+**Rule**: Constrain generics when needed
+
+**Example**:
+
+```typescript
+// ✅ Good - constrained generic
+function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
+  return obj[key];
+}
+
+// Usage
+const user = { id: '1', name: 'John' };
+const name = getProperty(user, 'name'); // Type: string
+```",medium,"*.ts,*.tsx"
+typescript-discriminated-unions,Core,"shared,typescript","### Discriminated Unions
+**Rule**: Use discriminated unions for state management
+
+**Example**:
+
+```typescript
+// ✅ Good pattern
+type LoadingState = 
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'success'; data: User }
+  | { status: 'error'; error: string };
+
+function handleState(state: LoadingState) {
+  switch (state.status) {
+    case 'success':
+      // TypeScript knows state.data exists
+      return state.data;
+    case 'error':
+      // TypeScript knows state.error exists
+      return state.error;
+  }
+}
+```
+
+## API Type Patterns",medium,"*.ts,*.tsx"
+typescript-response-types,Core,"shared,typescript","### Response Types
+**Rule**: Define clear API response types
+
+**Example**:
+
+```typescript
+// ✅ Good - clear response structure
+interface ApiResponse<T> {
+  data: T;
+  status: number;
+  message?: string;
+}
+
+interface ApiError {
+  error: string;
+  code: string;
+  details?: Record<string, string>;
+}
+
+type Result<T> = ApiResponse<T> | ApiError;
+```",medium,"*.ts,*.tsx"
+typescript-request-types,Core,"shared,typescript","### Request Types
+**Rule**: Type API request parameters
+
+**Example**:
+
+```typescript
+// ✅ Good - typed request
+interface CreateUserRequest {
+  name: string;
+  email: string;
+  role?: 'admin' | 'user';
+}
+
+async function createUser(data: CreateUserRequest): Promise<User> {
+  // Implementation
+}
+```
+
+## Best Practices",medium,"*.ts,*.tsx"
+typescript-avoid-unnecessary-fallbacks,Core,"shared,typescript","### Avoid Unnecessary Fallbacks
+**Rule**: Don't use fallback values for required fields
+
+**Example**:
+
+```typescript
+// ❌ Bad - hides missing data
+const name = user?.name || 'Unknown';
+
+// ✅ Good - handle missing data explicitly
+if (!user?.name) {
+  throw new Error('User name is required');
+}
+const name = user.name;
+```",medium,"*.ts,*.tsx"
+typescript-strict-null-checks,Core,"shared,typescript","### Strict Null Checks
+**Rule**: Enable strictNullChecks in tsconfig.json
+
+**Example**:
+
+```json
+{
+  ""compilerOptions"": {
+    ""strictNullChecks"": true,
+    ""strict"": true
+  }
+}
+```",medium,"*.ts,*.tsx"
+jotai-example,State Management,"state,jotai","### Example
+```ts
+import { atom } from 'jotai';
+
+// Primitive atom
+export const countAtom = atom(0);
+
+// Derived atom (read-only)
+export const doubleCountAtom = atom((get) => get(countAtom) * 2);
+
+// Write-only derived atom
+export const incrementAtom = atom(
+  null, // initial value (unused)
+  (get, set, update) => set(countAtom, get(countAtom) + 1)
+);
+```",medium,
+redux-toolkit-slice-example,State Management,"state,redux-toolkit","### Slice Example
+```ts
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+interface CounterState {
+  value: number;
+}
+
+const initialState: CounterState = { value: 0 };
+
+export const counterSlice = createSlice({
+  name: 'counter',
+  initialState,
+  reducers: {
+    increment: (state) => {
+      state.value += 1; // Immer handles immutability
+    },
+    incrementByAmount: (state, action: PayloadAction<number>) => {
+      state.value += action.payload;
+    },
+  },
+});
+```",medium,
+zustand-create-stores,State Management,"state,zustand","### Create Stores
+**Rule**: Use `create` with TypeScript
+
+**Example**:
+
+```typescript
+import { create } from 'zustand';
+
+interface UserStore {
+  user: User | null;
+  setUser: (user: User) => void;
+  clearUser: () => void;
+}
+
+export const useUserStore = create<UserStore>((set) => ({
+  user: null,
+  setUser: (user) => set({ user }),
+  clearUser: () => set({ user: null }),
+}));
+```",medium,
+zustand-selectors,State Management,"state,zustand","### Selectors
+**Rule**: Use selectors for derived state
+
+**Example**:
+
+```typescript
+// ✅ Good - selector
+const userName = useUserStore((state) => state.user?.name);
+
+// ❌ Bad - whole state
+const { user } = useUserStore();
+const userName = user?.name;
+```
+
+## Best Practices",medium,
+zustand-immer-for-nested-updates,State Management,"state,zustand","### Immer for Nested Updates
+**Rule**: Use immer middleware for complex state
+
+**Example**:
+
+```typescript
+import { immer } from 'zustand/middleware/immer';
+
+export const useStore = create<State>()(
+  immer((set) => ({
+    nested: { value: 0 },
+    increment: () => set((state) => {
+      state.nested.value++;
+    }),
+  }))
+);
+```",medium,
+zustand-persist-middleware,State Management,"state,zustand","### Persist Middleware
+**Rule**: Use persist for localStorage sync
+
+**Example**:
+
+```typescript
+import { persist } from 'zustand/middleware';
+
+export const useStore = create<State>()(
+  persist(
+    (set) => ({
+      theme: 'light',
+      setTheme: (theme) => set({ theme }),
+    }),
+    { name: 'app-storage' }
+  )
+);
+```",medium,
+zustand-slice-pattern,State Management,"state,zustand","### Slice Pattern
+**Rule**: Split large stores into slices
+
+**Example**:
+
+```typescript
+const createUserSlice = (set) => ({
+  user: null,
+  setUser: (user) => set({ user }),
+});
+
+const createSettingsSlice = (set) => ({
+  theme: 'light',
+  setTheme: (theme) => set({ theme }),
+});
+
+export const useStore = create((set) => ({
+  ...createUserSlice(set),
+  ...createSettingsSlice(set),
+}));
+```",medium,
+framer-motion-example,Styling,"styling,ui,framer-motion","### Example
+```tsx
+import { motion } from 'framer-motion';
+
+const fadeIn = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: 20 }
+};
+
+export function FadeCard({ children }) {
+  return (
+    <motion.div
+      variants={fadeIn}
+      initial=""initial""
+      animate=""animate""
+      transition={{ duration: 0.3 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+```",medium,
+shadcn-ui-example-check,Styling,"styling,ui,shadcn-ui","### Example Check
+When adding a new component (e.g., `Select`):
+1.  Run `npx shadcn@latest add select`.
+2.  Verify it loads correctly in a playground page.
+3.  Check `tailwind.config.ts` for any missing animations (e.g., `accordion-down`).
+
+## Customization
+Customize theme tokens in `app/globals.css` (CSS variables), not hardcoded hex values in components.
+
+```css
+:root {
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+}
+```",medium,
+tailwind-example,Styling,"styling,ui,tailwind","### Example
+```tsx
+import { cn } from '@/lib/utils';
+
+interface ButtonProps {
+  className?: string;
+  variant?: 'primary' | 'secondary';
+}
+
+export function Button({ className, variant = 'primary', ...props }: ButtonProps) {
+  return (
+    <button
+      className={cn(
+        // Layout & Base
+        'inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors',
+        // Interactions
+        'hover:opacity-90 focus-visible:outline-none focus-visible:ring-1',
+        // Variants
+        variant === 'primary' && 'bg-primary text-primary-foreground',
+        variant === 'secondary' && 'bg-secondary text-secondary-foreground',
+        // External overrides
+        className
+      )}
+      {...props}
+    />
+  );
+}
+```
+
+## Anti-Patterns
+- ❌ Avoid arbitrary values: `w-[325px]` (Use layout components or percentage).
+- ❌ Avoid `@apply` in CSS modules unless absolutely necessary.
+- ❌ Avoid string concatenation for classes: `` `btn ${active ? 'active' : ''}` `` (Use `cn()`).",medium,tailwind.config.ts
+playwright-example,Testing,"testing,playwright","### Example
+```ts
+import { test, expect } from '@playwright/test';
+
+test('has title', async ({ page }) => {
+  await page.goto('/');
+  await expect(page).toHaveTitle(/Stelixx App/);
+});
+
+test('can login', async ({ page }) => {
+  await page.goto('/login');
+  await page.getByLabel('Email').fill('user@example.com');
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await expect(page).toHaveURL('/dashboard');
+});
+```",medium,
+vitest-example,Testing,"testing,vitest","### Example
+```tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Counter } from './Counter';
+import { vi } from 'vitest';
+
+test('increments counter', async () => {
+  const user = userEvent.setup();
+  render(<Counter />);
+  
+  const button = screen.getByRole('button', { name: /count is/i });
+  await user.click(button);
+  
+  expect(button).toHaveTextContent(/count is 1/i);
+});
+```",medium,
+i18n-message-files,Framework,"frontend,web,i18n","### Message Files
+**Rule**: Use compile-time i18n with Paraglide.js
+
+**Example**:
+
+```json
+// packages/i18n/messages/en.json
+{
+  ""welcome_title"": ""Welcome to our app"",
+  ""hello_user"": ""Hello, {name}!""
+}
+```",medium,
+i18n-usage-in-components,Framework,"frontend,web,i18n","### Usage in Components
+**Rule**: Import from `@repo/i18n` and use message functions
+
+**Example**:
+
+```typescript
+import { m } from ""@repo/i18n""
+
+export function WelcomeMessage({ name }: Props) {
+  return (
+    <div>
+      <h1>{m.welcome_title()}</h1>
+      <p>{m.hello_user({ name })}</p>
+    </div>
+  )
+}
+```
+
+## Best Practices",medium,
+i18n-compile-after-changes,Framework,"frontend,web,i18n","### Compile After Changes
+**Rule**: Always compile after editing message files
+
+**Example**:
+
+```bash
+pnpm i18n:compile
+```",high,
+i18n-type-safety,Framework,"frontend,web,i18n","### Type Safety
+**Rule**: Paraglide generates TypeScript types automatically
+
+**Example**:
+
+```typescript
+// ✅ Good - type-safe
+m.hello_user({ name: ""John"" })
+
+// ❌ Bad - missing parameter
+m.hello_user() // TypeScript error
+
+// ❌ Bad - wrong parameter
+m.hello_user({ username: ""John"" }) // TypeScript error
+```",medium,
+i18n-message-organization,Framework,"frontend,web,i18n","### Message Organization
+**Rule**: Group related messages with prefixes
+
+**Example**:
+
+```json
+{
+  ""auth_login_title"": ""Login"",
+  ""auth_login_button"": ""Sign In"",
+  ""auth_signup_title"": ""Sign Up"",
+  ""auth_signup_button"": ""Create Account""
+}
+```",medium,
+nextjs-server-first,Framework,"frontend,web,nextjs","### Server First
+**Rule**: Default to Server Components, use Client Components only when needed
+
+**Example**:
+
+```typescript
+// ✅ Server Component (default)
+export async function Page() {
+  const data = await fetchData()
+  return <div>{data}</div>
+}
+
+// Only use ""use client"" when needed
+""use client""
+export function InteractiveButton() {
+  const [count, setCount] = useState(0)
+  return <button onClick={() => setCount(count + 1)}>{count}</button>
+}
+```",medium,"next.config.js,app/**,pages/**"
+nextjs-use-client-first-line,Framework,"frontend,web,nextjs","### Use Client First Line
+**Rule**: 'use client' must be the first line
+
+**Example**:
+
+```typescript
+""use client""
+
+import { FC } from ""react""
+```
+
+## React Patterns",high,"next.config.js,app/**,pages/**"
+nextjs-explicit-props,Framework,"frontend,web,nextjs","### Explicit Props
+**Rule**: Define Props interface with FC<Props>
+
+**Example**:
+
+```typescript
+interface Props {
+  data: DataType
+}
+
+export const Component: FC<Props> = ({ data }) => {
+  return <div>{data}</div>
+}
+```",medium,"next.config.js,app/**,pages/**"
+nextjs-extract-business-logic,Framework,"frontend,web,nextjs","### Extract Business Logic
+**Rule**: Keep components focused on rendering, extract logic to hooks
+
+**Example**:
+
+```typescript
+// ✅ Good - logic in hook
+function useUserData(userId: string) {
+  const [user, setUser] = useState<User | null>(null)
+  
+  useEffect(() => {
+    fetchUser(userId).then(setUser)
+  }, [userId])
+  
+  return user
+}
+
+export function UserProfile({ userId }: Props) {
+  const user = useUserData(userId)
+  return <div>{user?.name}</div>
+}
+```
+
+## Performance",medium,"next.config.js,app/**,pages/**"
+nextjs-next-image,Framework,"frontend,web,nextjs","### Next Image
+**Rule**: Always use next/image for images
+
+**Example**:
+
+```typescript
+import Image from 'next/image'
+
+// ✅ Good
+<Image
+  src=""/photo.jpg""
+  alt=""Photo""
+  width={500}
+  height={300}
+  priority
+/>
+
+// ❌ Bad
+<img src=""/photo.jpg"" alt=""Photo"" />
+```",high,"next.config.js,app/**,pages/**"
+nextjs-code-splitting,Framework,"frontend,web,nextjs","### Code Splitting
+**Rule**: Use dynamic imports for heavy components
+
+**Example**:
+
+```typescript
+import dynamic from 'next/dynamic'
+
+const HeavyComponent = dynamic(() => import('./HeavyComponent'), {
+  loading: () => <p>Loading...</p>
+})
+```
+
+## Best Practices",medium,"next.config.js,app/**,pages/**"
+nextjs-metadata-api,Framework,"frontend,web,nextjs","### Metadata API
+**Rule**: Use Next.js 13+ Metadata API
+
+**Example**:
+
+```typescript
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Page Title',
+  description: 'Page description'
+}
+```",medium,"next.config.js,app/**,pages/**"
+nextjs-route-handlers,Framework,"frontend,web,nextjs","### Route Handlers
+**Rule**: Use Route Handlers for API routes
+
+**Example**:
+
+```typescript
+// app/api/users/route.ts
+export async function GET() {
+  const users = await fetchUsers()
+  return Response.json(users)
+}
+
+export async function POST(request: Request) {
+  const data = await request.json()
+  const user = await createUser(data)
+  return Response.json(user)
+}
+```",medium,"next.config.js,app/**,pages/**"
+react-functional-components,Framework,"frontend,web,react","### Functional Components
+**Rule**: Always use functional components with hooks
+
+**Example**:
+
+```typescript
+// ✅ Good
+export const Component: FC<Props> = ({ data }) => {
+  const [state, setState] = useState(initialState)
+  return <div>{data}</div>
+}
+
+// ❌ Bad - class components
+class Component extends React.Component {
+  render() {
+    return <div>{this.props.data}</div>
+  }
+}
+```",high,
+react-props-interface,Framework,"frontend,web,react","### Props Interface
+**Rule**: Define explicit Props interface
+
+**Example**:
+
+```typescript
+interface ComponentProps {
+  title: string
+  onClose: () => void
+  children?: React.ReactNode
+}
+
+export const Component: FC<ComponentProps> = ({ title, onClose, children }) => {
+  return <div>{title}</div>
+}
+```
+
+## Hooks",medium,
+react-custom-hooks,Framework,"frontend,web,react","### Custom Hooks
+**Rule**: Extract reusable logic into custom hooks
+
+**Example**:
+
+```typescript
+function useLocalStorage<T>(key: string, initialValue: T) {
+  const [value, setValue] = useState<T>(() => {
+    const stored = localStorage.getItem(key)
+    return stored ? JSON.parse(stored) : initialValue
+  })
+  
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(value))
+  }, [key, value])
+  
+  return [value, setValue] as const
+}
+```",medium,
+react-effect-dependencies,Framework,"frontend,web,react","### Effect Dependencies
+**Rule**: Always specify correct dependencies
+
+**Example**:
+
+```typescript
+// ✅ Good
+useEffect(() => {
+  fetchData(userId)
+}, [userId])
+
+// ❌ Bad - missing dependency
+useEffect(() => {
+  fetchData(userId)
+}, [])
+```
+
+## State Management",high,
+react-local-state,Framework,"frontend,web,react","### Local State
+**Rule**: Keep state as local as possible
+
+**Example**:
+
+```typescript
+// ✅ Good - state in component that uses it
+function Counter() {
+  const [count, setCount] = useState(0)
+  return <button onClick={() => setCount(count + 1)}>{count}</button>
+}
+```",medium,
+react-derived-state,Framework,"frontend,web,react","### Derived State
+**Rule**: Don't store derived state, compute it
+
+**Example**:
+
+```typescript
+// ✅ Good
+function UserList({ users }: Props) {
+  const activeUsers = users.filter(u => u.active)
+  return <div>{activeUsers.length} active</div>
+}
+
+// ❌ Bad - storing derived state
+function UserList({ users }: Props) {
+  const [activeUsers, setActiveUsers] = useState([])
+  
+  useEffect(() => {
+    setActiveUsers(users.filter(u => u.active))
+  }, [users])
+}
+```",medium,
+ui-consistency-cards,UI Consistency,"ui,cards,consistency","### Feature Cards
+**Rule**: All feature cards MUST follow these specs:
+- **Wrapper**: Use `<Card>` (handles padding via CSS variables).
+- **Subcomponents**: No padding classes on `<CardHeader>`, `<CardContent>`, or `<CardFooter>`.
+- **Interactivity**: Add hover states to wrapper if interactive.
+
+**Example**:
+
+```tsx
+<Card className=""group relative border hover:shadow-lg hover:-translate-y-0.5"">
+  <CardHeader>
+    <CardTitle className=""text-base font-semibold"">Title</CardTitle>
+  </CardHeader>
+  <CardContent>
+    Content
+  </CardContent>
+</Card>
+```",medium,
+card-component-structure,UI Components,"ui,card,structure","### Card Component Structure
+**Rule**: Card component defines padding; subcomponents inherit it.
+
+**Structure**:
+1. **Card**: Applies padding using CSS variables (`--card-padding-mobile`, `--card-padding-desktop`).
+2. **CardHeader/Content/Footer**: Do NOT add `p-*` or `px-*` classes.
+
+**Source of Truth**:
+- Tokens: `packages/tailwind-preset/TOKENS.md`
+- Implementation: `packages/ui/src/components/ui/card.tsx`",high,
+design-tokens-usage,Styling,"styling,tokens,css-variables","### Design Tokens Usage
+**Rule**: Use CSS variables for system spacing and colors defined in `@theme`.
+
+**Why**: Ensures consistency across mobile/desktop and supports theming (Tailwind v4).
+
+**Example**:
+```css
+/* In @theme */
+--card-padding-mobile: 1rem;
+```
+
+```tsx
+// In Component
+className=""p-[var(--card-padding-mobile)]""
+```",high,
+ui-consistency-badges,UI Consistency,"ui,badges,consistency","### Badges
+**Rule**: ALWAYS use helper functions for variants.
+- **Helper**: \`getPriorityVariant(priority)\`
+- **Shape**: \`rounded-md\`
+
+**Example**:
+\`\`\`tsx
+<Badge variant={getPriorityVariant(priority)} className=""rounded-md"">
+  {label}
+</Badge>
+\`\`\`",high,
+project-rules-post-edit-verification,Other,project-rules,"### 🚨 POST-EDIT VERIFICATION PROTOCOL (MANDATORY)
+**Rule**: After ANY code modification (cook/fix/refactor), you MUST run verification BEFORE notifying the user.
+
+**Protocol**:
+1.  **Edit Code**: Make your changes.
+2.  **Verify**: Run `pnpm type-check` (or `npx tsc --noEmit` on specific files).
+3.  **Fix**: If verification fails, fix the errors IMMEDIATELY. Do not report success if build fails.
+4.  **Notify**: Only report ""Done"" when the build passes.
+
+**Command**:
+```bash
+# Run this after editing .ts/.tsx files
+pnpm type-check
+```
+
+**Checklist**:
+- [ ] 0 lint errors
+- [ ] 0 type errors
+- [ ] 0 build errors
+- [ ] No `any` types left behind",high,
+project-rules-rule-3-feature-boundaries,Other,project-rules,"### Rule 3: Feature Boundaries
+```typescript
+// ✅ DO: Clear separation
+apps/web/features/audit/        # Audit execution
+apps/web/features/analytics/    # Audit data analysis
+
+// ❌ DON'T: Mix concerns
+apps/web/features/audit/components/analytics-trend.tsx  // Wrong!
+```",medium,
+systemic-instruction-awareness,Core,"shared,instructions","### Systemic Instruction Awareness
+**Rule**: AI agents must treat instructions as ""Executive Code"" to follow, not just ""Passive Documentation"".
+
+**Mandate**: 
+1. For all tasks, verify against `.agent/instructions.md` BEFORE proposing a plan.
+2. For Level 1 & 2 tasks (Infra, API, Auth), create or update a Research/Audit doc confirming compliance with relevant rules.
+3. NEVER skip instruction verification for workflows that change code, plans, or documentation.",high,
+infrastructure-research-protocol,Infrastructure,"devops,nginx,k3s,docker,vps","### Infrastructure Research Protocol (CRITICAL)
+**Rule**: NEVER implement infrastructure changes based on assumptions. ALWAYS verify actual architecture via SSH first.
+
+**Trigger Conditions**:
+- Modifying Nginx configuration
+- K3s/Docker routing changes
+- VPS deployment scripts
+- Network architecture assumptions
+
+**Mandatory Steps**:
+1. SSH to target environment and execute the SSH Investigation Checklist (see AGENTS.md).
+2. Document actual architecture (System Nginx vs Docker, Monolithic vs Modular config).
+3. Identify existing upstreams and routing paths (e.g., Traefik vs Direct).
+4. Create/Update `plans/infrastructure/DDMMYY-research.md` BEFORE implementation.
+5. Present findings to user and get explicit approval.",high,"deployment/,nginx/,k3s/,docker-compose.yml,deploy-.sh"
+governance-risk-levels,Other,governance,"### Risk Level Classification
+**Rule**: Classify every task by Risk Level BEFORE starting:
+- **Level 1 (High)**: Infrastructure. Requires Architecture Audit.
+- **Level 2 (Medium)**: Logic/API/Auth/I18n. Requires Rule Compliance Audit.
+- **Level 3 (Low)**: UI/Content. Passive rule loading.
+",high,
+governance-rule-audit,Other,governance,"### Rule Compliance Audit
+**Rule**: For Level 1 & 2 tasks, you MUST list 3-5 critical rules and explain compliance in your plan.
+**Why**: Ensures quality from start, preventing verification failure explosion.
+",high,
+styling-tailwind-logic,Styling,tailwind,"### Tailwind: Logic over Strings
+**Rule**: NEVER use template literals for conditional classes (e.g. `btn ${active ? 'a' : 'b'}`).
+**Requirement**: ALWAYS use `cn()` or `clsx()` for conditional logic.
+",high,
+governance-risk-levels,Other,"shared,governance,core","### Risk Level Classification
+**Rule**: Classify every task by Risk Level BEFORE starting:
+- **Level 1 (High)**: Infrastructure. Requires Architecture Audit.
+- **Level 2 (Medium)**: Logic/API/Auth/I18n. Requires Rule Compliance Audit.
+- **Level 3 (Low)**: UI/Content. Passive rule loading.
+",high,
+governance-rule-audit,Other,"shared,governance,core","### Rule Compliance Audit
+**Rule**: For Level 1 & 2 tasks, you MUST list 3-5 critical rules and explain compliance in your plan.
+**Why**: Ensures quality from start, preventing verification failure explosion.
+",high,
+styling-tailwind-logic,Styling,"shared,tailwind,core","### Tailwind: Logic over Strings
+**Rule**: NEVER use template literals for conditional classes (e.g. `btn ${active ? 'a' : 'b'}`).
+**Requirement**: ALWAYS use `cn()` or `clsx()` for conditional logic.
+",high,
+styling-design-system-first,Styling,"shared,design-system,core","### Design System First
+**Rule**: Before any UI/Styling work, you MUST check `design-system/MASTER.md` or `tailwind.config.ts`.
+**Requirement**: Explicitly list the design tokens (colors, spacing) you will use in your plan.
+",high,
+i18n-no-hardcoded-strings,Other,"shared,i18n,core","### No Hardcoded Strings
+**Rule**: PROHIBITED from using hardcoded strings in JSX.
+**Requirement**: Use `m.key()` from `@repo/i18n` or local i18n helper.
+",high,
+api-no-hardcoded-urls,Backend,"shared,api,core","### No Hardcoded API URLs
+**Rule**: PROHIBITED from hardcoding `/api/v1/` in literals.
+**Requirement**: Use `apiClient` with `API_CONFIG.ENDPOINTS` instead.
+",high,
+conductor-track-structure,Conductor,instructions,"### SKT Conductor Track Structure
+
+**Rule**: When planning features, ALWAYS use Conductor track structure
+
+**Pattern**:
+```bash
+# 1. Create track with anchors
+skt track new ""Add OAuth support"" --anchors apps/cli/src/auth packages/core/auth
+
+# 2. Write plan to track directory
+.skt/tracks/<track-id>/plan.md
+.skt/tracks/<track-id>/spec.md
+
+# 3. Update beacon
+skt sync
+```
+
+**DO NOT**:
+- ❌ Create separate artifacts in `.gemini/brain/`
+- ❌ Write plans outside `.skt/tracks/`
+
+**Load detailed**: `.skt/tracks/ACTIVE_PLAN.md`",high,
+conductor-multi-agent-coordination,Conductor,instructions,"### Multi-Agent Coordination
+
+**Rule**: Check for active tracks and conflicts before planning
+
+**Workflow**:
+```bash
+# 1. Check active tracks
+cat .skt/tracks/ACTIVE_PLAN.md
+
+# 2. If conflicts exist, read impact assessment
+cat .skt/tracks/<track-id>/impact.md
+
+# 3. Decide: Sequential or Parallel
+# - High conflict (>70% anchor overlap) → Sequential
+# - Medium conflict (30-70%) → Parallel with caution
+# - Low conflict (<30%) → Safe parallel
+```
+
+**Example**:
+```markdown
+# From ACTIVE_PLAN.md
+### Track 1: Refactor Auth
+- **Anchors**: `apps/cli/src/auth`
+- **Conflicts**: ⚠️ High with Track 2
+
+### Track 2: Add OAuth
+- **Anchors**: `apps/cli/src/auth`, `packages/core/auth`
+- **Conflicts**: ⚠️ High with Track 1
+
+→ Decision: Complete Track 1 first, then start Track 2
+```",high,
+conductor-planning-workflow,Conductor,instructions,"### Conductor Planning Workflow
+
+**Rule**: Follow this exact sequence when user asks to plan a feature
+
+**Steps**:
+1. **Create Track**:
+   ```bash
+   skt track new ""<description>"" --anchors <paths>
+   ```
+
+2. **Write Plan**:
+   - Path: `.skt/tracks/<track-id>/plan.md`
+   - Include: Goals, phases, tasks, verification
+
+3. **Write Spec**:
+   - Path: `.skt/tracks/<track-id>/spec.md`
+   - Include: Technical details, API contracts, data models
+
+4. **Sync Beacon**:
+   ```bash
+   skt sync
+   ```
+
+5. **Check Conflicts**:
+   ```bash
+   skt track assess
+   ```
+
+**DO NOT** skip any step!",high,
+conductor-implementation-workflow,Conductor,instructions,"### Conductor Implementation Workflow
+
+**Rule**: When implementing (after planning), follow this sequence
+
+**Steps**:
+1. **Activate Track** (if not already active):
+   ```bash
+   skt track activate <track-id>
+   ```
+
+2. **Read Plan**:
+   ```bash
+   cat .skt/tracks/<track-id>/plan.md
+   ```
+
+3. **Implement Code**:
+   - Follow plan phases
+   - Update track progress via `skt track` commands
+
+4. **Update Beacon**:
+   ```bash
+   skt sync  # Auto-updates beacon
+   ```
+
+5. **Close Track** (when done):
+   ```bash
+   skt track close <track-id>
+   ```",high,
+cli-command-usage,Core,"shared,cli","### CLI Command Usage
+**Rule**: ALWAYS use direct `skt` commands. DO NOT use `pnpm exec skt`, `npm run skt`, or `yarn skt`.
+
+**Example**:
+- ✅ `skt sync`
+- ✅ `skt plan ""description""`
+- ❌ `pnpm exec skt sync` ",high,
