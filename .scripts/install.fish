@@ -1,8 +1,10 @@
 # Installation Script for Yoong's Dotfiles
 
-set -e
 
-echo "🚀 Installing Yoong's Dotfiles..."
+
+
+set -l DOTFILES_ROOT (realpath (dirname (status filename))/..)
+echo "🚀 Installing Yoong's Dotfiles from $DOTFILES_ROOT..."
 
 # Check if Fish is installed
 if not command -v fish >/dev/null
@@ -18,9 +20,19 @@ if test -d ~/.config/fish
     mv ~/.config/fish $backup_dir
 end
 
-# Create symlink
-echo "🔗 Creating symlink..."
-ln -s ~/dotfiles-public/.config/fish ~/.config/fish
+# Create fish config directory
+echo "📁 Creating Fish config directory..."
+mkdir -p ~/.config/fish
+
+# Granular symlinks for Fish
+echo "🔗 Creating granular symlinks for Fish..."
+set -l fish_items config.fish config-osx.fish fish_plugins conf.d functions completions themes
+for item in $fish_items
+    if test -e $DOTFILES_ROOT/.config/fish/$item
+        ln -sfn $DOTFILES_ROOT/.config/fish/$item ~/.config/fish/$item
+        echo "   ✅ Linked $item"
+    end
+end
 
 # Install Fisher if not already installed
 if not type -q fisher
@@ -34,10 +46,10 @@ echo "📦 Installing Fisher plugins..."
 fisher update
 
 # Git config
-if test -f ~/dotfiles-public/.gitconfig
+if test -f $DOTFILES_ROOT/.gitconfig
     echo "🔗 Symlinking .gitconfig..."
-    test -f ~/.gitconfig && mv ~/.gitconfig ~/.gitconfig.backup
-    ln -s ~/dotfiles-public/.gitconfig ~/.gitconfig
+    test -f ~/.gitconfig -a ! -L ~/.gitconfig && mv ~/.gitconfig ~/.gitconfig.backup
+    ln -sfn $DOTFILES_ROOT/.gitconfig ~/.gitconfig
 end
 
 echo ""

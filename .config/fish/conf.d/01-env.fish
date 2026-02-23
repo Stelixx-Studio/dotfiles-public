@@ -9,15 +9,19 @@ set -gx EDITOR nvim
 # Terminal
 set -gx TERM xterm-256color
 
-# Java - Use Homebrew symlink (shorter path, auto-updates)
-if test -d /opt/homebrew/opt/openjdk@17
-    set -gx JAVA_HOME /opt/homebrew/opt/openjdk@17
-    set -gx CPPFLAGS "-I/opt/homebrew/opt/openjdk@17/include"
-    fish_add_path --prepend /opt/homebrew/opt/openjdk@17/bin
+# Java - Prioritize latest version for Flutter
+if test -d /opt/homebrew/opt/openjdk
+    set -gx JAVA_HOME /opt/homebrew/opt/openjdk
+    set -gx CPPFLAGS "-I/opt/homebrew/opt/openjdk/include"
+    fish_add_path --prepend /opt/homebrew/opt/openjdk/bin
 else if test -d /opt/homebrew/opt/openjdk@21
     set -gx JAVA_HOME /opt/homebrew/opt/openjdk@21
     set -gx CPPFLAGS "-I/opt/homebrew/opt/openjdk@21/include"
     fish_add_path --prepend /opt/homebrew/opt/openjdk@21/bin
+else if test -d /opt/homebrew/opt/openjdk@17
+    set -gx JAVA_HOME /opt/homebrew/opt/openjdk@17
+    set -gx CPPFLAGS "-I/opt/homebrew/opt/openjdk@17/include"
+    fish_add_path --prepend /opt/homebrew/opt/openjdk@17/bin
 end
 
 # Inkdrop (macOS only)

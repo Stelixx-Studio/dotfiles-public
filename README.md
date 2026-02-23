@@ -90,11 +90,14 @@ curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fi
 # Backup existing configs
 mv ~/.config/fish ~/.config/fish.backup
 
-# Create symlink
-ln -s ~/dotfiles-public/.config/fish ~/.config/fish
+# Run installation script (recommended)
+./.scripts/install.fish
 
-# Install Fisher plugins
-fisher update
+# OR manually create granular symlinks:
+# mkdir -p ~/.config/fish
+# ln -s ~/dotfiles-public/.config/fish/config.fish ~/.config/fish/config.fish
+# ln -s ~/dotfiles-public/.config/fish/conf.d ~/.config/fish/conf.d
+# ... and so on
 ```
 
 ### 5. Install Tide prompt

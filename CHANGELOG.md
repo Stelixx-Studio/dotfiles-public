@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.2.0] - 2026-02-24
+
+### Added
+- **Granular Symlinking**: Improved Fish configuration installation to use granular symlinks for individual config files/folders instead of symlinking the entire `~/.config/fish` directory.
+- **Isolation**: Machine-specific state files (like `fish_variables`) now remain local and are no longer tracked in the repository.
+
+### Changed
+- Updated `install.fish` with smarter symlink logic.
+- Updated documentation (`README.md`, `QUICKSTART.md`) to reflect the new installation pattern.
+- Updated `Brewfile` and environment configurations.
+
+### Removed
+- Cleaned up redundant `github.com` and `fish_variables` files from the repository.
+
 ## [1.1.0] - 2026-02-09
 
 ### Added

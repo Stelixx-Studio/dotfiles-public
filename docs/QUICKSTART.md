@@ -137,10 +137,17 @@ exec fish
 If anything goes wrong:
 
 ```fish
-# Remove dotfiles
-rm ~/.config/fish
+# Remove symlinked configs
+rm ~/.config/fish/config.fish
+rm ~/.config/fish/config-osx.fish
+rm ~/.config/fish/fish_plugins
+rm -rf ~/.config/fish/conf.d
+rm -rf ~/.config/fish/functions
+rm -rf ~/.config/fish/completions
+rm -rf ~/.config/fish/themes
 
 # Restore backup
+rm -rf ~/.config/fish
 mv ~/.config/fish.backup-* ~/.config/fish
 
 # Restart
