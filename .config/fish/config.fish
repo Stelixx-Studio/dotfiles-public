@@ -29,3 +29,4 @@ end
 # Note: conf.d/*.fish files are auto-loaded by Fish in alphabetical order
 # Load order: 00-path.fish → 01-env.fish → 02-aliases.fish → 03-tools.fish
 
+

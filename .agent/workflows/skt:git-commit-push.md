@@ -11,8 +11,79 @@ This workflow uses execution logic from `.skt/shared/claudekit/`.
 Before execution, verify the project rules in `.agent/instructions.md`.
 
 
-### 1. Context
-!python3 .skt/shared/workflows/scripts/context_loader.py
+## Execution Instructions
 
-## Execution
-!python3 .skt/shared/claudekit/scripts/query-workflow.py git-commit-push $argv
+> **Agent**: Antigravity — follow each phase sequentially using `run_command` for shell commands.
+> **Template**: `.skt/shared/claudekit/templates/` (if applicable)
+> **Artifact Dir**: Create artifacts in your brain directory using `write_to_file`.
+
+### Phase 1: Analyze Changes
+Analyze staged changes
+
+```bash
+git status --porcelain
+```
+```bash
+git diff --cached --stat
+```
+
+**Expected Output**: Changed files list
+
+### Phase 2: Agentic Quality Assurance
+Perform contextual quality checks and autonomous repair.
+
+1. **Rule Discovery**: Load project standards and quality mandates.
+   ```bash
+   python3 .skt/shared/instructions/scripts/query-rules.py --tags project-rules,quality --format markdown
+   ```
+2. **Capability Analysis**: Check `package.json` and project structure to identify available quality tools.
+3. **Execution**: Run `.skt/shared/claudekit/scripts/auto-check.sh`.
+4. **Autonomous Fix**: If issues are found:
+   - Analyze the specific error logs to identify failing files and root causes.
+   - **Fix Everything**: Proactively fix all lint errors, warnings, and deprecated patterns using your coding tools.
+   - **Alignment**: If a fix is ambiguous or potentially breaking, pause and align with the user.
+   - **Verification**: Re-run Phase 2 until `auto-check.sh` returns success.
+
+**Expected Output**: Clean verification. All fixable issues resolved.
+
+### Phase 3: Generate Message
+Create conventional commit message
+
+**Expected Output**: Commit message
+
+### Phase 4: Handle Changeset
+Detect and generate changeset if needed
+
+```bash
+python3 .skt/shared/skt-core/scripts/smart-changeset.py
+```
+
+**Expected Output**: Changeset file
+
+### Phase 5: Commit
+Commit changes with message
+
+```bash
+git commit -m "$MESSAGE"
+```
+
+**Expected Output**: Commit hash
+
+### Phase 6: Push
+Push to remote branch
+
+```bash
+git push
+```
+
+**Expected Output**: Push status
+
+### Phase 7: Close Track
+Finalize and close active track
+
+```bash
+skt orchestrator:close
+```
+
+**Expected Output**: Track closed
+

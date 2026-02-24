@@ -46,21 +46,15 @@ if test -d ~/Library/Android/sdk
     fish_add_path --append $ANDROID_HOME/platform-tools
 end
 
-# Project-local bins (LAST - lowest priority to avoid conflicts)
-# Only add if in a project directory with these folders
-if test -d node_modules/.bin
-    fish_add_path --append node_modules/.bin
-end
-if test -d bin
-    fish_add_path --append ./bin
-end
-
-# Deduplicate PATH by removing duplicates (keeps first occurrence)
-# This handles system PATH duplicates that Fish doesn't control
-set -l unique_paths
-for p in $PATH
-    if not contains $p $unique_paths
-        set -a unique_paths $p
+# Project-local bins (ONLY in interactive shells to avoid overhead in automation)
+if status is-interactive
+    if test -d node_modules/.bin
+        fish_add_path --append --move node_modules/.bin
+    end
+    if test -d bin
+        fish_add_path --append --move ./bin
     end
 end
-set -gx PATH $unique_paths
+
+# Note: fish_add_path automatically deduplicates and handles prepending/appending correctly.
+# No manual loop needed.
