@@ -1,3 +1,0 @@
-id,name,category,description,commands,auto_execution
-orchestrator,Orchestrator,coordination,"Multi-track orchestration and conflict management for parallel AI agents",orchestrate|tracks|conflicts|sync-tracks,2
-mcp-manager,MCP Manager,utility,"MCP server tool execution for browser/docs",/use-mcp,2

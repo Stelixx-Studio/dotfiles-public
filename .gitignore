@@ -7,8 +7,9 @@
 .idea/
 
 # [SKT] AI Artifacts
-.agent/instructions.md
 .agent/instructions/generated/
+.agent/workflows/*
+.agent/archive/
 .skt/meta/index.json
 
 # [SKT] Internal State

@@ -1,5 +1,6 @@
 {
   "version": "2.0.0",
+  "project_id": "dotfiles-public",
   "workspace": {
     "type": "manual",
     "language": "typescript",
@@ -26,18 +27,6 @@
       ]
     }
   },
-  "mcp": {
-    "enabled": true,
-    "servers": {
-      "skt-context": {
-        "command": "skt",
-        "args": [
-          "mcp",
-          "start"
-        ]
-      }
-    }
-  },
   "ai": {
     "assistants": [
       "antigravity",
@@ -57,5 +46,21 @@
         "prompts": ".github/prompts"
       }
     }
+  },
+  "mcp": {
+    "enabled": true,
+    "servers": {
+      "skt-context": {
+        "command": "skt",
+        "args": [
+          "mcp",
+          "start"
+        ]
+      }
+    }
+  },
+  "skt": {
+    "globalMode": true,
+    "globalPath": "/Users/joepham/.skt"
   }
 }

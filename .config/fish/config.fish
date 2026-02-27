@@ -30,3 +30,5 @@ end
 # Load order: 00-path.fish → 01-env.fish → 02-aliases.fish → 03-tools.fish
 
 
+set -gx ANTHROPIC_BASE_URL http://localhost:8080
+alias claude-gemini "ANTHROPIC_BASE_URL=http://localhost:8080 claude"

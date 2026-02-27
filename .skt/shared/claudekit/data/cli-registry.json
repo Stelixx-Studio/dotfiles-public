@@ -1,6 +1,0 @@
-{
-    "version": "1.0.0",
-    "deprecated": true,
-    "deprecationMessage": "CLI commands removed in v0.4.0. Use workflows via AI agent: /skt:scout, /skt:plan, /skt:cook, etc.",
-    "commands": []
-}

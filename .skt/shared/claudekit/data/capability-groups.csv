@@ -1,4 +1,0 @@
-id,name,description,display_order
-essential,Essential,Core workflows for everyday development,1
-common,Common,Frequently used workflows for specific tasks,2
-advanced,Advanced,Specialized workflows for complex scenarios,3
