@@ -6,12 +6,6 @@
 .vscode/
 .idea/
 
-# [SKT] AI Artifacts
-.agent/instructions/generated/
-.agent/workflows/*
-.agent/archive/
-.skt/meta/index.json
-
 # [SKT] Internal State
 .skt/archive
 .skt/tmp/
@@ -25,3 +19,19 @@ features/skills/data/learning-session-*.json
 .config/fish/conf.d/local.fish
 .config/fish/conf.d/*.local.fish
 .config/**/secrets.*
+
+# [SKT] Generated Agent Directories (Machine-specific hubs)
+.skt/
+.claude/history/
+.claude/settings.local.json
+.roo/history/
+.opencode/command
+.opencode/node_modules
+.opencode/package.json
+.opencode/bun.lock
+
+# [SKT] Shared Agent Intelligence (ENSURE THESE ARE TRACKED)
+.cursor/*
+!.cursor/commands/
+.windsurf/*
+!.windsurf/workflows/
