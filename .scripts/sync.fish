@@ -15,6 +15,10 @@ cp -rv ~/.config/fish/conf.d/*.fish .config/fish/conf.d/ 2>/dev/null || true
 # Sync functions
 cp -rv ~/.config/fish/functions/*.fish .config/fish/functions/ 2>/dev/null || true
 
+# Zsh config used to keep AI agents on zsh while preserving fish for human terminals
+echo "🦓 Syncing zsh config..."
+cp -v ~/.zshrc .zshrc 2>/dev/null || echo "⚠️ No .zshrc found"
+
 # Ghostty
 if test -d ~/.config/ghostty
     echo "👻 Syncing Ghostty config..."

@@ -107,17 +107,17 @@ fisher install IlanCosman/tide@v6
 tide configure
 ```
 
-### 6. Set Fish as default shell
+### 6. Set zsh as default shell (recommended for AI agents)
 
 ```fish
-echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells
-chsh -s /opt/homebrew/bin/fish
+chsh -s /bin/zsh
 ```
+This dotfiles setup keeps `zsh` for automation/AI runtimes and automatically hands off to `fish` in normal interactive terminal sessions.
 ## Configuration Coverage
 
 This repository tracks configurations for the following tools:
 
-- **Shell**: [Fish Shell](https://fishshell.com/)
+- **Shell**: [zsh](https://zsh.sourceforge.io/) (login shell) + [Fish Shell](https://fishshell.com/) (interactive handoff)
 - **Terminal**: [Ghostty](https://ghostty.org/)
 - **Git UI**: [Lazygit](https://github.com/jesseduffield/lazygit)
 - **Multiplexer**: [Tmux](https://github.com/tmux/tmux)

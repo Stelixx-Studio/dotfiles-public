@@ -49,7 +49,13 @@ This will:
 exec fish
 ```
 
-## 6. Configure Tide Prompt
+## 6. Keep zsh as login shell (AI-agent friendly)
+
+```fish
+chsh -s /bin/zsh
+```
+
+## 7. Configure Tide Prompt
 
 ```fish
 tide configure
@@ -60,7 +66,7 @@ Choose your preferred style:
 - **Classic** - Two-line with decorations
 - **Rainbow** - Colorful
 
-## 7. Install Recommended Tools (Optional)
+## 8. Install Recommended Tools (Optional)
 
 ```fish
 # Essential CLI tools
@@ -73,7 +79,7 @@ brew install lazygit
 brew install htop btop
 ```
 
-## 8. Verify Installation
+## 9. Verify Installation
 
 ```fish
 # Check startup time (should be <200ms)

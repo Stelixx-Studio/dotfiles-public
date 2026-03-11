@@ -3,6 +3,11 @@
 # Main orchestrator - loads modular configs
 # ==============================================================================
 
+# Never stay in fish for Codex/AI runtime shells.
+if set -q CODEX_SHELL
+    exec zsh -l
+end
+
 # Disable greeting
 set fish_greeting ""
 

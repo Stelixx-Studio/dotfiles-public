@@ -14,8 +14,8 @@ This document lists recommended tools that work well with this dotfiles setup.
 ### Fonts
 
 - **[Nerd Fonts](https://www.nerdfonts.com/)** - Patched fonts with icons
-  - Recommended: FiraCode Nerd Font, JetBrains Mono Nerd Font
-  - Install: `brew install --cask font-fira-code-nerd-font`
+  - Recommended: Hack Nerd Font Mono, FiraCode Nerd Font, JetBrains Mono Nerd Font
+  - Install: `brew install --cask font-hack-nerd-font`
 
 ### Shell Tools
 

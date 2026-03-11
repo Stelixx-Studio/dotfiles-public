@@ -1,5 +1,9 @@
 if type -q eza
-  alias ll "eza -l -g --icons"
+  if set -q CODEX_SHELL
+    alias ll "eza -l -g --icons=never"
+  else
+    alias ll "eza -l -g --icons"
+  end
   alias lla "ll -a"
 end
 
