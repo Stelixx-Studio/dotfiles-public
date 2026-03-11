@@ -92,6 +92,17 @@ echo $PATH | tr ' ' '\n' | sort | uniq -d
 command -v git node pnpm ruby java
 ```
 
+```bash
+# Verify shell routing
+dscl . -read /Users/$USER UserShell
+ps -p $$ -o comm=
+```
+
+Expected:
+- `UserShell: /bin/zsh`
+- Normal terminal session: `fish`
+- AI runtime terminal (Codex/Antigravity/OpenCode/CI): `zsh`
+
 ## Expected Results
 
 After installation, you should see:
@@ -99,6 +110,9 @@ After installation, you should see:
 - 🎨 Tide prompt with git status
 - 🔧 All aliases working (`ll`, `g`, `vim`)
 - 📦 Clean PATH with no duplicates
+
+AI runtime note:
+- Prompt/icons may intentionally fall back to ASCII in AI terminals to prevent tofu squares when Nerd Fonts are unavailable.
 
 ## Troubleshooting
 

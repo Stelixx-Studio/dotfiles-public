@@ -113,6 +113,22 @@ tide configure
 chsh -s /bin/zsh
 ```
 This dotfiles setup keeps `zsh` for automation/AI runtimes and automatically hands off to `fish` in normal interactive terminal sessions.
+
+### 7. Verify shell behavior
+
+```bash
+dscl . -read /Users/$USER UserShell
+ps -p $$ -o comm=
+```
+
+Expected:
+- `UserShell: /bin/zsh`
+- Normal user terminal: `fish`
+- AI runtime terminal (Codex/Antigravity/OpenCode/CI): `zsh`
+
+Notes:
+- In AI terminals, this setup disables Nerd-font-dependent prompt/icons to avoid tofu squares.
+- `ll` uses `eza --icons=never` in AI runtimes, while normal terminals keep icons enabled.
 ## Configuration Coverage
 
 This repository tracks configurations for the following tools:
