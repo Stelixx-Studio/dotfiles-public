@@ -35,3 +35,8 @@ features/skills/data/learning-session-*.json
 !.cursor/commands/
 .windsurf/*
 !.windsurf/workflows/
+
+# [SKT] AI Artifacts
+.agent/instructions.md
+.agent/instructions/generated/
+.skt/meta/index.json
