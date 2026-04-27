@@ -2,6 +2,39 @@
 # If you want fish for a human session, launch it explicitly with `fish -l`.
 [ -r "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 
+# =============================================
+# ZINIT - Plugin Manager
+# =============================================
+### Added by Zinit's installer
+if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+    print -P "%F{33} %F{220}Installing %F{33}Zinit%F{220}..."
+    mkdir -p "$HOME/.local/share/zinit" && command git clone --depth 1 "https://github.com/zdharma-continuum/zinit" "$HOME/.local/share/zinit/zinit.git" && \
+        print -P "%F{33} %F{210}Installation successful.%f" || \
+        print -P "%F{160} Installation failed.%f"
+fi
+
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+
+# Load plugins (tương tự fish)
+zinit light zsh-users/zsh-autosuggestions    # Autocomplete suggestions
+zinit light zsh-users/zsh-syntax-highlighting # Syntax highlighting
+zinit light zsh-users/zsh-completions         # Extra completions
+zinit light Aloxaf/fzf-tab                   # FZF tab completion
+
+# Theme
+zinit light romkatv/powerlevel10k
+
+# =============================================
+# Config
+# =============================================
+# Enable Powerlevel10k instant prompt
+if [[ -r "$HOME/.p10k.zsh" ]]; then
+    source "$HOME/.p10k.zsh"
+fi
+
+# Auto update zinit
+zplugin self-update
+
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
