@@ -16,10 +16,16 @@ fi
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 
 # Load plugins (tương tự fish)
-zinit light zsh-users/zsh-autosuggestions    # Autocomplete suggestions
-zinit light zsh-users/zsh-syntax-highlighting # Syntax highlighting
-zinit light zsh-users/zsh-completions         # Extra completions
-zinit light Aloxaf/fzf-tab                   # FZF tab completion
+# 1. Gợi ý command từ history
+zinit light zsh-users/zsh-autosuggestions
+# 2. Syntax highlighting
+zinit light zsh-users/zsh-syntax-highlighting
+# 3. Extra completions
+zinit light zsh-users/zsh-completions
+# 4. Search history bằng prefix (↑/↓)
+zinit light zsh-users/zsh-history-substring-search
+# 5. FZF tab completion
+zinit light Aloxaf/fzf-tab
 
 # Theme
 zinit light romkatv/powerlevel10k
