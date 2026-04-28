@@ -58,3 +58,26 @@ export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 if command -v zoxide &> /dev/null; then
     eval "$(zoxide init zsh)"
 fi
+
+# =============================================
+# FZF - Key Bindings & Config
+# Cài: brew install fzf
+# =============================================
+if [ -f ~/.fzf.zsh ]; then
+    source ~/.fzf.zsh
+fi
+
+# FZF default commands
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_CTRL_R_COMMAND='fc -l | sort -rn | head -50 | fzf --prompt="history> "'
+
+# =============================================
+# ghq - Repository management (giống fish-ghq)
+# Cài: brew install ghq
+# =============================================
+if command -v ghq &> /dev/null; then
+    export GHQ_ROOT="$HOME/ghq"
+    alias g='cd $(ghq root)/$(ghq list | fzf)'
+    alias gl='ghq list'
+fi
