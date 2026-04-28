@@ -54,10 +54,11 @@ export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 # =============================================
 # Zoxide - Directory Jumping (giống fish z)
 # Cài: brew install zoxide
-# Dùng 'jz' thay vì 'z' để tránh conflict với zinit
+# Sử dụng: z <folder>, zoxide query --interactive
 # =============================================
 if command -v zoxide &> /dev/null; then
-    eval "$(zoxide init zsh --cmd jz)"
+    eval "$(zoxide init zsh)"
+    alias zi='zoxide query --interactive'  # thay cho zi bị conflict
 fi
 
 # =============================================
