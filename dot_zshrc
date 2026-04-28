@@ -57,29 +57,11 @@ export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 # Sử dụng: z <folder>, zi (interactive)
 # =============================================
 if command -v zoxide &> /dev/null; then
-    # Dùng --no-cmd để tránh conflict với zinit
-    eval "$(zoxide init zsh --no-cmd)"
+    # Unalias zi trước khi init để tránh conflict với zinit
+    (( ${+aliases[zi]} )) && unalias zi
     
-    # Unalias zi để tránh conflict với zinit
-    unalias zi 2>/dev/null
-    
-    # Define z command
-    function z() {
-        if [[ "$#" -eq 0 ]]; then
-            cd ~
-        elif [[ "$#" -eq 1 ]] && { [[ -d "$1" ]] || [[ "$1" = '-' ]]; }; then
-            cd "$1"
-        else
-            local result
-            result="$(zoxide query --exclude "$(pwd)" -- "$@")" && cd "${result}"
-        fi
-    }
-    
-    # Define zi cho zoxide interactive
-    function zi() {
-        local result
-        result="$(zoxide query --interactive -- "$@")" && cd "${result}"
-    }
+    # Init zoxide - đặt ở cuối cùng sau mọi thứ
+    eval "$(zoxide init zsh)"
 fi
 
 # =============================================
