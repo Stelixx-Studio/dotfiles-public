@@ -50,3 +50,11 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Added by Antigravity
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+
+# =============================================
+# Zoxide - Directory Jumping (giống fish z)
+# Cài: brew install zoxide
+# =============================================
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init zsh)"
+fi
