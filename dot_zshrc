@@ -38,8 +38,8 @@ if [[ -r "$HOME/.p10k.zsh" ]]; then
     source "$HOME/.p10k.zsh"
 fi
 
-# Auto update zinit
-zplugin self-update
+# Auto update zinit (bỏ comment nếu muốn tắt hoàn toàn)
+# zplugin self-update
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
