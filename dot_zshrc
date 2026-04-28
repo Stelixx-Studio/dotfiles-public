@@ -38,8 +38,9 @@ if [[ -r "$HOME/.p10k.zsh" ]]; then
     source "$HOME/.p10k.zsh"
 fi
 
-# Auto update zinit (bỏ comment nếu muốn tắt hoàn toàn)
-# zplugin self-update
+# Zinit self-update: chạy THỦ CÔNG khi cần, KHÔNG tự động mỗi terminal
+# Cách dùng: zinit self-update hoặc zplugin self-update
+# Nếu muốn chạy quiet: zplugin self-update -q
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
